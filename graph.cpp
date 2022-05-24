@@ -11,10 +11,10 @@ Graph::Graph(int num, bool dir) : n(num), hasDir(dir), nodes(num+1) {
 }
 
 // Add edge from source to destination with a certain weight
-void Graph::addEdge(int src, int dest, int capacity, int time) {
+void Graph::addEdge(int src, int dest, int capacity, int flow, int time) {
     if (src<0 || src>n || dest<0 || dest>n) return;
-    nodes[src].adj.push_back({dest, capacity, time});
-    if (!hasDir) nodes[dest].adj.push_back({src, capacity, time});
+    nodes[src].adj.push_back({dest, capacity, flow, time});
+    if (!hasDir) nodes[dest].adj.push_back({src, capacity, flow, time});
 }
 
 
@@ -97,7 +97,7 @@ void Graph::dijkstra(int s) {
 
 
 
-/*void Graph::BFS(int a, int b) {
+void Graph::BFS(int a, int b) {
 
 
     // initialize all nodes as unvisited
@@ -108,7 +108,7 @@ void Graph::dijkstra(int s) {
     nodes[a].visited=true;
     while (!q.empty()) { // while there are still unvisited nodes
         int u = q.front(); q.pop();
-        //cout << u << " "; // show node order
+        cout << u << " "; // show node order
         for (auto e : nodes[u].adj) {
             int w = e.dest;
             if (!nodes[w].visited) {
@@ -125,7 +125,7 @@ void Graph::dijkstra(int s) {
     }
     cout << endl;
 
-}*/
+}
 
 /*
 list<int> Graph::BFS_path(int a, int b, list<string>& linhas) {
@@ -158,3 +158,7 @@ list<int> Graph::BFS_path(int a, int b, list<string>& linhas) {
     path.insert(path.begin(), a);
     return path;
 }*/
+
+
+
+

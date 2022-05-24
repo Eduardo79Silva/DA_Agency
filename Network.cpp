@@ -75,6 +75,10 @@ Graph Network::networkGraph() {
     return net;
 }
 
+const Graph &Network::getNetwork() const {
+    return network;
+}
+
 /*Graph Network::toGraph() {
 
     Graph (nodes, true);

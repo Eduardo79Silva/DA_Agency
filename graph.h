@@ -21,6 +21,7 @@ class Graph {
     struct Edge {
         int dest;   // Destination node
         int capacity;
+        int flow;
         int time;  // Two integer weights (capacity, time)
     };
 
@@ -47,7 +48,7 @@ public:
     Graph(int nodes, bool dir = false);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, int capacity = 1, int time = 1);
+    void addEdge(int src, int dest, int capacity = 1, int flow=0, int time = 1);
 
     /**
      * Calcula a menor distância com base no algoritmo de Dijkstra

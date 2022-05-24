@@ -14,6 +14,10 @@ using namespace std;
 
 
 class Network {
+public:
+    const Graph &getNetwork() const;
+
+private:
     string filepath;
     int nodes;
     int edges;
