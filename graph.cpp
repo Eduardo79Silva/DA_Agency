@@ -20,7 +20,7 @@ void Graph::addEdge(int src, int dest, int capacity, int time) {
 
 
 //to remove
-void Graph::print(){
+void Graph::print() const {
     int edgeCount = 0;
     for(int i=1;i<=n;i++){
         std::cout << "src: " << i << ":\n";

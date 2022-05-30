@@ -5,9 +5,10 @@
 #ifndef DA_TRAVEL_MENU_H
 #define DA_TRAVEL_MENU_H
 
-#include "Application.h"
 #include <iostream>
+#include <iomanip>
 #include<unistd.h>
+#include "Network.h"
 
 /**
  * @brief Virtual Class to be used to create all the other menus
@@ -20,7 +21,7 @@ protected:
     /**
      * @brief Singleton for acess to application functionalities
      */
-    Application * application = Application::getInstance();
+    Network * application = Network::getInstance();
     Menu * next_menu = nullptr;
 
 public:
@@ -67,6 +68,12 @@ public:
     void display() override;
 };
 
+class IntermediateMenu: public Menu {
+public:
+    explicit IntermediateMenu();
+    void display() override;
+};
+
 /**
  * @brief Menu to support Scenery 1 demonstration
  */
@@ -84,17 +91,6 @@ class Scenery2_Menu: public Menu {
 public:
 
     explicit Scenery2_Menu();
-    void display() override;
-
-};
-
-/**
- * @brief Menu to support Scenery 3 demonstration
- */
-class Scenery3_Menu: public Menu {
-public:
-
-    explicit Scenery3_Menu();
     void display() override;
 };
 

@@ -4,82 +4,62 @@
 
 #include "Network.h"
 
+Network::Network() = default;
 
-Network::Network(string filestring){  //file vai ser um número (representado em string)
+Network* Network::nw = nullptr;
 
-    //get filepath for the desired network
+Network *Network::getInstance() {
+    if (nw == nullptr) nw = new Network();
+    return nw;
+}
 
-    string filep;
+void Network::readData(const string& filestring) {
 
-    if (stoi(filestring)>=0 && stoi(filestring)<=9) {
-        filep = ".././Tests_B/in0" + filestring + "_b.txt";
-    }
-    else {
-        filep = ".././Tests_B/in" + filestring + "_b.txt";
-    }
-
-    filepath = filep;
-
-    //read the info about the network
-
+    (stoi(filestring)>=0 && stoi(filestring)<=9) ? filepath = ".././Tests_B/in0" + filestring + "_b.txt" : ".././Tests_B/in" + filestring + "_b.txt";
     readInfo();
-
-    //read the network to the graph
-
-    network = networkGraph();
-
-    //reading to graph completed
-
+    network = readGraph();
 }
 
 void Network::readInfo() {
-
     ifstream file;
     file.open(filepath);
     string nod, edg;
     getline(file, nod, ' ');
     getline(file, edg, '\n');
-    int nodeno = stoi(nod);
-    this->nodes = nodeno;
-    int edgeno = stoi(edg);
-    this->edges = edgeno;
-
+    int node_no = stoi(nod);
+    this->nodes = node_no;
+    int edge_no = stoi(edg);
+    this->edges = edge_no;
 }
 
-
-Graph Network::networkGraph() {
+Graph * Network::readGraph() {
 
     //vector<vector<int>> info;
-    Graph net(nodes, true);
+    auto * net = new Graph(nodes, true);
 
     ifstream file;
     file.open(filepath);
     file.ignore(1000, '\n');
 
-    string origins, destinations, capacitys, durations;
+    string origins, destinations, capacities, durations;
     int origin, destination, capacity, duration;
 
 
     while (getline(file, origins, ' ')) {
         getline(file, destinations, ' ');
-        getline(file, capacitys, ' ');
+        getline(file, capacities, ' ');
         getline(file, durations, '\n');
         origin = stoi(origins);
         destination = stoi(destinations);
-        capacity = stoi(capacitys);
+        capacity = stoi(capacities);
         duration = stoi(durations);
         //cout << origin << "  -  " << destination << "  -  " << capacity << "  -  " << duration << endl;
-        net.addEdge(origin, destination, capacity, duration);  //alterar fields do grafo e métodos
+        net->addEdge(origin, destination, capacity, duration);  //alterar fields do grafo e métodos
     }
 
     return net;
 }
 
-const Graph &Network::getNetwork() const {
+Graph * Network::getNetwork() const {
     return network;
 }
-
-/*Graph Network::toGraph() {
-
-    Graph (nodes, true);
-}*/

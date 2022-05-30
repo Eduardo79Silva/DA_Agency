@@ -1,20 +1,24 @@
 #include <iostream>
 #include "Network.h"
+#include "Starter.h"
 #include <string>
 
 using namespace std;
 
 int main() {
 
-    int network_number = 00;
+    Starter starter = Starter();
+    starter.start();
+
+    /*int network_number = 00;
 
     Network networkrep = Network(to_string(network_number));
 
     Graph network_graph = networkrep.getNetwork();  //graph read working
 
-    /*cout << endl << endl << endl << endl << endl;
+    *//*cout << endl << endl << endl << endl << endl;
 
-    network_graph.BFS(1,30);  //bfs working*/
+    network_graph.BFS(1,30);  //bfs working*//*
 
     //network_graph.print();
 
@@ -28,7 +32,7 @@ int main() {
 
     network_graph.dijkstra(src);
     path = network_graph.get_path(src, dest);
-
+*/
 
 
 

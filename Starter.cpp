@@ -3,15 +3,14 @@
 //
 
 #include "Starter.h"
+#include "Network.h"
 
 Starter::Starter() {
-    application = Application::getInstance();
+    application = Network::getInstance();
     menuStack.push(new MainMenu());
 }
 
 void Starter::start() {
-
-    /*application->loadData();*/
 
     while (!menuStack.empty()) {
         menuStack.top()->display();

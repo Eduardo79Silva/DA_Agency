@@ -29,6 +29,38 @@ MainMenu::MainMenu() : Menu() { }
 
 void MainMenu::display() {
 
+    int option;
+
+    using namespace std;
+
+    cout << std::endl;
+    cout << "_____________________________________" << endl;
+    cout << "|             MAIN MENU             |" << endl;
+    cout << "|___________________________________|" << endl;
+    cout << "|   Choose your desired dataset:    |" << endl;
+    cout << "|                                   |" << endl;
+
+    for(int i = 0; i < 11; i++) {
+        std::cout  << "|    [" << i << "] " << setw(6 - (to_string(i).length() + 2)) << left  << "Dataset" << " "
+        << setw(20 - to_string(i).length()) << left << i  << "|" << std::endl;
+    }
+    cout << "|                                   |" << endl;
+    cout << "|   [0] Exit                        |" << endl;
+    cout << "|___________________________________|" << endl;
+
+    std::cout << "Please input your choice: " << std::endl << std::flush;
+    std::cin >> option;
+
+    if (option >= 0 && option <= 11) {
+        application->readData(to_string(option));
+        setNextMenu(new IntermediateMenu());
+    }
+}
+
+IntermediateMenu::IntermediateMenu() : Menu() {};
+
+void IntermediateMenu::display() {
+
     char option;
 
     using namespace std;
@@ -37,11 +69,10 @@ void MainMenu::display() {
     cout << "_____________________________________" << endl;
     cout << "|             MAIN MENU             |" << endl;
     cout << "|___________________________________|" << endl;
-    cout << "|   Select your desired route:      |" << endl;
+    cout << "|   Select your scenery:            |" << endl;
     cout << "|                                   |" << endl;
     cout << "|   [1] Scenery 1                   |" << endl;
     cout << "|   [2] Scenery 2                   |" << endl;
-    cout << "|   [3] Scenery 3                   |" << endl;
     cout << "|                                   |" << endl;
     cout << "|   [0] Exit                        |" << endl;
     cout << "|___________________________________|" << endl;
@@ -55,9 +86,6 @@ void MainMenu::display() {
             break;
         case '2':
             setNextMenu(new Scenery2_Menu());
-            break;
-        case '3':
-            setNextMenu(new Scenery3_Menu());
             break;
         case '0':
             setNextMenu(nullptr);
@@ -142,41 +170,3 @@ void Scenery2_Menu::display() {
     }
 
 }
-
-Scenery3_Menu::Scenery3_Menu() : Menu() { }
-
-void Scenery3_Menu::display() {
-
-    char option;
-
-    using namespace std;
-
-    cout << std::endl;
-    cout << "_____________________________________" << endl;
-    cout << "|             Scenery 3             |" << endl;
-    cout << "|___________________________________|" << endl;
-    cout << "|                                   |" << endl;
-    cout << "|   [1] Exec                        |" << endl;
-    cout << "|   [2] Print                       |" << endl;
-    cout << "|                                   |" << endl;
-    cout << "|   [0] Exit                        |" << endl;
-    cout << "|___________________________________|" << endl;
-
-    std::cout << "Please input your choice: " << std::endl << std::flush;
-    std::cin >> option;
-
-    switch ((char) option) {
-        case '1':
-            /*Application::getInstance()->scenery3();*/
-            sleep(4);
-            break;
-        case '2':
-            /*Application::getInstance()->printDeliveryMan(false);*/
-            sleep(4);
-            break;
-        case '0': return;
-        default: std::cout << "Invalid Input \n:";
-            system("pause");
-    }
-}
-

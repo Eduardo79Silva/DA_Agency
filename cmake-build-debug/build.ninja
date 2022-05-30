@@ -73,12 +73,6 @@ build CMakeFiles/DA_Travel.dir/Starter.cpp.o: CXX_COMPILER__DA_Travel_Debug /hom
   OBJECT_DIR = CMakeFiles/DA_Travel.dir
   OBJECT_FILE_DIR = CMakeFiles/DA_Travel.dir
 
-build CMakeFiles/DA_Travel.dir/Application.cpp.o: CXX_COMPILER__DA_Travel_Debug /home/zediogo96/Documents/FEUP/DA/projeto2/Application.cpp || cmake_object_order_depends_target_DA_Travel
-  DEP_FILE = CMakeFiles/DA_Travel.dir/Application.cpp.o.d
-  FLAGS = -g -std=gnu++14
-  OBJECT_DIR = CMakeFiles/DA_Travel.dir
-  OBJECT_FILE_DIR = CMakeFiles/DA_Travel.dir
-
 build CMakeFiles/DA_Travel.dir/Menu.cpp.o: CXX_COMPILER__DA_Travel_Debug /home/zediogo96/Documents/FEUP/DA/projeto2/Menu.cpp || cmake_object_order_depends_target_DA_Travel
   DEP_FILE = CMakeFiles/DA_Travel.dir/Menu.cpp.o.d
   FLAGS = -g -std=gnu++14
@@ -93,7 +87,7 @@ build CMakeFiles/DA_Travel.dir/Menu.cpp.o: CXX_COMPILER__DA_Travel_Debug /home/z
 #############################################
 # Link the executable DA_Travel
 
-build DA_Travel: CXX_EXECUTABLE_LINKER__DA_Travel_Debug CMakeFiles/DA_Travel.dir/main.cpp.o CMakeFiles/DA_Travel.dir/graph.cpp.o CMakeFiles/DA_Travel.dir/Network.cpp.o CMakeFiles/DA_Travel.dir/Starter.cpp.o CMakeFiles/DA_Travel.dir/Application.cpp.o CMakeFiles/DA_Travel.dir/Menu.cpp.o
+build DA_Travel: CXX_EXECUTABLE_LINKER__DA_Travel_Debug CMakeFiles/DA_Travel.dir/main.cpp.o CMakeFiles/DA_Travel.dir/graph.cpp.o CMakeFiles/DA_Travel.dir/Network.cpp.o CMakeFiles/DA_Travel.dir/Starter.cpp.o CMakeFiles/DA_Travel.dir/Menu.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/DA_Travel.dir
   POST_BUILD = :

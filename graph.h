@@ -53,7 +53,7 @@ public:
     void addEdge(int src, int dest, int capacity = 1, int time = 1);
 
     //to remove
-    void print();
+    void print() const;
 
     void dijkstra(int s);
 

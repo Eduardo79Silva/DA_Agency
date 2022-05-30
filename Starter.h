@@ -8,8 +8,8 @@
 
 #include <stack>
 
-#include "Application.h"
 #include "Menu.h"
+#include "Network.h"
 
 using namespace std;
 
@@ -20,7 +20,7 @@ class Starter {
 
 private:
 
-    Application * application;
+    Network * application;
     stack<Menu*> menuStack;
 
 public:

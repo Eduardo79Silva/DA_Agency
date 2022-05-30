@@ -14,23 +14,31 @@ using namespace std;
 
 
 class Network {
+protected:
+    Network();
+
+    static Network * nw;
+
+    Graph * network;
+
 public:
-    const Graph &getNetwork() const;
+    Graph * getNetwork() const;
+
+    void operator=(const Network &) = delete;
 
 private:
     string filepath;
     int nodes;
     int edges;
     //vector<vector<int>> graphInfo;  //vetor de dentro tem os 4 int da info do ficheiro
-    Graph network = Graph(0, true);
+
 
 public:
-    Network(string filestring);
+    static Network * getInstance();
     void readInfo();
-    Graph networkGraph();
+    Graph *  readGraph();
+    void readData(const string& filestring);
     //Graph toGraph();
-
-
 };
 
 
