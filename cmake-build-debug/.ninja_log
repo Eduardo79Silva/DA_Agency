@@ -1,0 +1,9 @@
+# ninja log v5
+1	626	1653926530834732429	CMakeFiles/DA_Travel.dir/Application.cpp.o	8ed61dadd0e22c3e
+1	739	1653926523215055196	CMakeFiles/DA_Travel.dir/Network.cpp.o	984c267e72816816
+1	800	1653926523279052423	CMakeFiles/DA_Travel.dir/graph.cpp.o	6a787ac8aab91458
+0	822	1653926523299051556	CMakeFiles/DA_Travel.dir/main.cpp.o	1aa38d8c9e95ca79
+1	656	1653926697338975070	CMakeFiles/DA_Travel.dir/Menu.cpp.o	a7186db16586b705
+0	732	1653926697414974504	CMakeFiles/DA_Travel.dir/Starter.cpp.o	1a5689333a22fe3b
+1	676	1653926714266868569	CMakeFiles/DA_Travel.dir/Starter.cpp.o	1a5689333a22fe3b
+676	791	1653926714382867978	DA_Travel	9bfe70670f5328f2
