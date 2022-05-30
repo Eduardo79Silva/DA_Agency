@@ -11,7 +11,7 @@ Network::Network(string filestring){  //file vai ser um número (representado em
 
     string filep;
 
-    if (stoi(filestring)>0 && stoi(filestring)<=9) {
+    if (stoi(filestring)>=0 && stoi(filestring)<=9) {
         filep = ".././Tests_B/in0" + filestring + "_b.txt";
     }
     else {
@@ -68,7 +68,7 @@ Graph Network::networkGraph() {
         destination = stoi(destinations);
         capacity = stoi(capacitys);
         duration = stoi(durations);
-        cout << origin << "  -  " << destination << "  -  " << capacity << "  -  " << duration << endl;
+        //cout << origin << "  -  " << destination << "  -  " << capacity << "  -  " << duration << endl;
         net.addEdge(origin, destination, capacity, duration);  //alterar fields do grafo e métodos
     }
 

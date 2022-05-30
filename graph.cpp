@@ -11,10 +11,37 @@ Graph::Graph(int num, bool dir) : n(num), hasDir(dir), nodes(num+1) {
 }
 
 // Add edge from source to destination with a certain weight
-void Graph::addEdge(int src, int dest, int capacity, int flow, int time) {
-    if (src<0 || src>n || dest<0 || dest>n) return;
-    nodes[src].adj.push_back({dest, capacity, flow, time});
-    if (!hasDir) nodes[dest].adj.push_back({src, capacity, flow, time});
+void Graph::addEdge(int src, int dest, int capacity, int time) {
+    if (src<1 || src>n || dest<1 || dest>n) return;
+    nodes[src].adj.push_back({dest, capacity, time});
+    nodes[dest].res.push_back({src, 0, time});
+    if (!hasDir) nodes[dest].adj.push_back({src, capacity, time});  //src to dest?
+}
+
+
+//to remove
+void Graph::print(){
+    int edgeCount = 0;
+    for(int i=1;i<=n;i++){
+        std::cout << "src: " << i << ":\n";
+        for(auto e : nodes[i].adj){
+            std::cout << "\tdest: " << e.dest
+                      << "\n\t\tcapacity: " << e.capacity
+                      << "\n\t\tduration: " << e.time
+                      << std::endl;
+            edgeCount++;
+        }
+        std::cout << "-residual: \n";
+        for(auto e : nodes[i].res){
+            std::cout << "\tdest: " << e.dest
+                      << "\n\t\tcapacity: " << e.capacity
+                      << "\n\t\tduration: " << e.time
+                      << std::endl;
+        }
+    }
+    std::cout << "\nNodes: " << n
+              << "\nEdges: " << edgeCount
+              << std::endl;
 }
 
 
@@ -68,32 +95,89 @@ void Graph::addEdge(int src, int dest, int capacity, int flow, int time) {
     return path;
 }*/
 
-/*
+
 void Graph::dijkstra(int s) {
-    MinHeap<int, double> q(n, -1);
+    MinHeap<int, int> q(n, -1);
     for (int v=1; v<=n; v++) {
         nodes[v].dist = INF;
-        q.insert(v, INF);
+        nodes[v].pred = 0;
+        q.insert(v, nodes[v].dist);
         nodes[v].visited = false;
     }
     nodes[s].dist = 0;
-    q.decreaseKey(s, 0);
+    nodes[s].pred = s;
+    q.insert(s, nodes[s].dist);
     nodes[s].pred = s;
     while (q.getSize()>0) {
         int u = q.removeMin();
         //cout << "Node " << u << " with dist = " << nodes[u].dist << endl;
         nodes[u].visited = true;
         for (auto e : nodes[u].adj) {
-            double v = e.dest;
-            double w = e.weight;
-            if (!nodes[v].visited && nodes[u].dist + w < nodes[v].dist) {
-                nodes[v].dist = nodes[u].dist + w;
+            int v = e.dest;
+            if (!nodes[v].visited && nodes[u].dist + 1 < nodes[v].dist) {
+                nodes[v].dist = nodes[u].dist + 1;
                 q.decreaseKey(v, nodes[v].dist);
                 nodes[v].pred = u;
             }
         }
     }
-}*/
+}
+
+
+void Graph::maximumFlowPath(int s) {
+
+    MaxHeap<int, int> q(n, -1);
+
+    for (int v=1; v<=n; v++) {
+        //nodes[v].dist = INF;
+        nodes[v].pred = 0;
+        nodes[v].capacity = 0;
+    }
+
+    nodes[s].capacity = INF;
+
+    for (int v=1; v<=n; v++) {
+        q.insert(v, nodes[v].capacity);
+    }
+
+
+    while (q.getSize()>0) {
+        int u = q.removeMax();
+        //cout << "Node " << u << " with dist = " << nodes[u].dist << endl;
+        for (auto e : nodes[u].adj) {
+            int v = e.dest;
+            int mincap = min(nodes[u].capacity, e.capacity);
+            if (mincap > nodes[v].capacity) {
+                nodes[v].capacity = mincap;
+                nodes[v].pred = u;
+                q.increaseKey(v, nodes[v].capacity);
+            }
+        }
+    }
+
+}
+
+
+list<int> Graph::get_path(int a, int b) {
+
+    list<int> path;
+    int tmp;
+
+    if (nodes[b].capacity == 0) return path;
+    path.push_back(b);
+    int v = b;
+    while (v != a) {
+        tmp = nodes[v].pred;
+        v = tmp;
+        path.push_front(v); // IMPORTANTE FAZER PUSH_FRONT
+    }
+
+    for (auto elem : path) cout << "[" << elem << "]" << endl;
+
+    return path;
+
+}
+
 
 
 
@@ -158,6 +242,13 @@ list<int> Graph::BFS_path(int a, int b, list<string>& linhas) {
     path.insert(path.begin(), a);
     return path;
 }*/
+
+
+
+
+
+
+
 
 
 

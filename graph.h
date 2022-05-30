@@ -5,6 +5,7 @@
 #define _GRAPH_H_
 
 #include "minHeap.h"
+#include "maxHeap.h"
 #include <vector>
 #include <list>
 #include <iostream>
@@ -21,13 +22,14 @@ class Graph {
     struct Edge {
         int dest;   // Destination node
         int capacity;
-        int flow;
         int time;  // Two integer weights (capacity, time)
     };
 
     struct Node {
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
-        double dist;
+        std::list<Edge> res;  // Residual
+        int dist;
+        int capacity;
         int pred;
         bool visited;
     };
@@ -40,7 +42,7 @@ class Graph {
      * Algoritmo de Dijkstra
      * @param s O nó de início
      */
-    void dijkstra(int s);
+
 
 
 public:
@@ -48,7 +50,12 @@ public:
     Graph(int nodes, bool dir = false);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, int capacity = 1, int flow=0, int time = 1);
+    void addEdge(int src, int dest, int capacity = 1, int time = 1);
+
+    //to remove
+    void print();
+
+    void dijkstra(int s);
 
     /**
      * Calcula a menor distância com base no algoritmo de Dijkstra
@@ -84,6 +91,17 @@ public:
     vector<Node> getNodes() {
         return nodes;
     }
+
+
+
+    void maximumFlowPath(int src);
+
+    list<int> get_path(int a, int b);
+
+
+
+
+
 
 
 };
