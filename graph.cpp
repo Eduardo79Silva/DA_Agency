@@ -247,6 +247,27 @@ list<int> Graph::BFS_path(int a, int b, list<string>& linhas) {
 
 
 
+int Graph::path_Capacity(list<int> path) {
+
+    vector<int> pathv;
+    for (int const &n: path) {
+        pathv.push_back(n);
+    }
+
+    int capacity = INF;
+    for(int i = 0; i < path.size(); i++){
+        for(auto e : nodes[i].adj){
+            if(e.dest==pathv[i-1])
+                capacity=min(capacity, e.capacity);
+        }
+    }
+    return capacity;
+}
+
+
+
+
+
 
 
 

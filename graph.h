@@ -98,6 +98,8 @@ public:
 
     list<int> get_path(int a, int b);
 
+    int path_Capacity(list<int> path);
+
 
 
 
