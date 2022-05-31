@@ -53,6 +53,7 @@ void MainMenu::display() {
 
     if (option >= 0 && option <= 11) {
         application->readData(to_string(option));
+        application->getNetwork()->print();
         setNextMenu(new IntermediateMenu());
     }
 }
@@ -82,7 +83,7 @@ void IntermediateMenu::display() {
 
     switch ((char) option) {
         case '1':
-            setNextMenu(new Scenery1_Menu());
+            cout << Network::getInstance()->getNetwork()->edmondKarpFlux(1,4) << endl;
             break;
         case '2':
             setNextMenu(new Scenery2_Menu());
@@ -99,7 +100,7 @@ Scenery1_Menu::Scenery1_Menu() : Menu() {}
 
 void Scenery1_Menu::display() {
 
-    char option;
+    int option;
 
     using namespace std;
 
@@ -117,17 +118,16 @@ void Scenery1_Menu::display() {
     std::cout << "Please input your choice: " << std::endl << std::flush;
     std::cin >> option;
 
-    switch ((char) option) {
-        case '1': {
-            /*Application::getInstance()->scenery1();*/
-            sleep(4);
+    switch (option) {
+        case 1: {
+
             break;
         }
-        case '2':
+        case 2:
             /*Application::getInstance()->printDeliveryMan(false);*/
             sleep(4);
             break;
-        case '0': return;
+        case 0: return;
         default: std::cout << "Invalid Input \n:";
             system("pause");
     }

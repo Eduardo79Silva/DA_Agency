@@ -23,9 +23,12 @@ class Graph {
         int dest;   // Destination node
         int capacity;
         int time;  // Two integer weights (capacity, time)
+        int flow;
+        int resCap;
     };
 
     struct Node {
+        int id;
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
         std::list<Edge> res;  // Residual
         int dist;
@@ -50,28 +53,12 @@ public:
     Graph(int nodes, bool dir = false);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, int capacity = 1, int time = 1);
+    void addEdge(int src, int dest, int capacity = 1, int flow = 0, int time = 1);
 
     //to remove
     void print() const;
 
     void dijkstra(int s);
-
-    /**
-     * Calcula a menor distância com base no algoritmo de Dijkstra
-     * @param a O nó de início
-     * @param b O nó de fim
-     * @return A menor distância de um nó ao outro
-     */
-    double dijkstra_distance(int a, int b);
-    /**
-     * Identifica o menor caminho com base no algoritmo de Dijkstra
-     * @param a O nó de início
-     * @param b O nó de fim
-     * @param linhas Lista que será preenchida com as linhas percorridas no percurso
-     * @return Uma lista de inteiros representado os nós percorridos
-     */
-    list<int> dijkstra_path(int a, int b, list<string>& linhas);
 
      /**
      * Algoritmo de Breadth First Search entre dois nós
@@ -79,33 +66,27 @@ public:
      * @param b O nó de fim
      */
     void BFS(int a, int b);
-    /**
-    * Identifica o melhor caminho tendo em conta o número de nós percorridos, com base no algoritmo de BFS
-    * @param a O nó de início
-    * @param b O nó de fim
-    * @param linhas Lista que será preenchida com as linhas percorridas no percurso
-    * @return Uma lista de inteiros representado os nós percorridos
-    */
-    list<int> BFS_path(int a , int b, list<string>& linhas);
+
 
     vector<Node> getNodes() {
         return nodes;
     }
 
-
-
     void maximumFlowPath(int src);
 
-    list<int> get_path(int a, int b);
+    vector<int> get_path(int a, int b);
 
     int path_Capacity(list<int> path);
 
 
+    int edmondKarpFlux(int start, int end);
 
 
+    std::pair<int, vector<Graph::Edge>> bfs1(int v, int b);
 
+    void reset_Flux();
 
-
+    Graph resGraph();
 };
 
 #endif
