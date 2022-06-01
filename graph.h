@@ -36,6 +36,8 @@ class Graph {
         int capacity;
         int pred;
         bool visited;
+        int ES;
+        int eDeg;
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
@@ -93,6 +95,7 @@ public:
     Graph resGraph();
 
     int correctGroupSize(int start, int end, int increment);
+    int earlestStart();
 };
 
 #endif
