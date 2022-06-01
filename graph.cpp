@@ -3,6 +3,7 @@
 
 #include "graph.h"
 #include <climits>
+#include <limits>
 
 #define INF (INT_MAX/2)
 
@@ -123,7 +124,6 @@ vector<int> Graph::get_path(int a, int b) {
         }
         tmp = nodes[v].pred;
         v = tmp;
-
         // POSSIVELMENTE ALTERAR -----------------------------------------------------------------------
         path.push_front(v); // IMPORTANTE FAZER PUSH_FRONT
     }
@@ -318,7 +318,7 @@ void Graph::reset_Flux() {
 }
 
 void Graph::BFS(int a, int b) {
-    
+
     // initialize all nodes as unvisited
     for (int v=1; v<=n; v++) nodes[v].visited = false;
     queue<int> q; // queue of unvisited nodes
@@ -344,7 +344,7 @@ void Graph::BFS(int a, int b) {
 
 }
 
-int Graph::earlestStart() {
+int Graph::earliestStart() {
     int minDuration = -1;
     int vf = 0;
 
@@ -353,6 +353,7 @@ int Graph::earlestStart() {
     for (int i = 1; i<=n; i++) {
         nodes[i].pred = 0;
         nodes[i].ES = 0;
+        nodes[i].EF = 0;
         nodes[i].eDeg = 0;
     }
     for (int i = 1; i<=n; i++) {
@@ -387,14 +388,150 @@ int Graph::earlestStart() {
         }
     }
 
+    std::stack<int> aux;
+    while (nodes[vf].pred) {
+        aux.push(vf);
+        vf = nodes[vf].pred;
+    }
+
+   /*while (!aux.empty()) {
+       cout << aux.top() << endl;
+       aux.pop();
+   }*/
+
     return minDuration;
 }
 
-int Graph::path_Capacity(list<int> path) {
+void Graph::topSort(int start, std::stack<int> &stack) {
+
+    nodes[start].visited = true;
+
+    for (Edge edge : nodes[start].adj) {
+        if (!(nodes[edge.dest].visited) && (edge.flow != 0)) topSort(edge.dest, stack);
+    }
+    stack.push(start);
+}
+
+int Graph::longestPath(int start, int end) {
+
+    int NINF = std::numeric_limits<int>::min();
+
+    std::stack<int> aux_stack;
+
+    // init all nodes as non-visited
+    for (int i = 1; i <= n; i++) {
+        nodes[i].visited = false;
+        nodes[i].pred = -1;
+    }
+    // store topo order
+    for (int i = 1; i <= n; i++) if (!nodes[i].visited) topSort(i, aux_stack);
+    // set all distances to inf
+    for (int i = 1; i <= n; i++) nodes[i].dist = NINF;
+
+    nodes[start].dist = 0;
+
+    int dest;
+
+    while (!aux_stack.empty()) {
+        int node = aux_stack.top();
+        aux_stack.pop();
+
+        // adj
+
+        if (nodes[node].dist != NINF) {
+            for (Edge edge : nodes[node].adj) {
+                if (edge.flow != 0) {
+                    dest = edge.dest;
+
+                    if (nodes[dest].dist < nodes[node].dist + edge.time) {
+                        nodes[dest].dist = nodes[node].dist + edge.time;
+                        nodes[dest].pred = node;
+                    }
+                }
+            }
+        }
+    }
+
+    /*int teste = end;
+    while (nodes[teste].pred != -1) {
+        cout << nodes[teste].pred << " ",
+        teste = nodes[teste].pred;
+    }*/
+
+    return nodes[end].dist;
+}
+
+void Graph::latestFinish() {
+
+    int minDuration = earliestStart();
+
+    for (int i = 1; i <= n; i++) {
+        nodes[i].LF = minDuration;
+        nodes[i].sDeg = 0;
+    }
+
+    for (int i = 1; i <= n; i++) {
+        for (Edge edge : nodes[i].adj) {
+            nodes[edge.dest].sDeg += 1;
+        }
+    }
+    // Supostamente isto é o graph transposto G^T
+    Graph transposed = transposeGraph();
+    // Não percebi qual é a estrutura, pois o V à frente vai ser
+    queue<int> S;
+
+    for (int i = 1; i <= n; i++) if (transposed.nodes[i].sDeg == 0) S.push(i);
+
+    while (!S.empty()) {
+        int v = S.front();
+        S.pop();
+
+            for (auto k : transposed.nodes[v].adj) {
+                if (transposed.nodes[k.dest].LF > (transposed.nodes[v].LF - k.time)) {
+                    transposed.nodes[k.dest].LF = transposed.nodes[v].LF - k.time;
+                    nodes[k.dest].LF = nodes[v].LF - k.time;
+                }
+                transposed.nodes[k.dest].sDeg = transposed.nodes[k.dest].sDeg - 1;
+
+                if (nodes[k.dest].sDeg == 0) S.push(k.dest);
+       }
+    }
+}
+
+void Graph::node_wait_times(int start, int end) {
+    maximumFlowPath(start);
+    earliestStart();
+    latestFinish();
+
+    int maxDuration = 0, maxWaitingNode = 0;
+
+    for (int i = 1; i <= n; i++) {
+
+        if ((nodes[i].LF - nodes[i].ES) != 0) {
+            cout << "Node: " << i << ", Waiting: " << nodes[i].LF - nodes[i].ES << endl;
+
+            if ((nodes[i].LF - nodes[i].ES) > maxDuration) {
+                for (Edge e : nodes[i].adj) {
+                    if (e.flow != 0) {
+                        maxDuration = (nodes[i].LF - nodes[i].ES);
+                        maxWaitingNode = i;
+                    }
+                }
+
+            }
+
+            if (i == end) break;
+        }
+    }
+
+    std::cout << "Biggest waiting time: " << maxDuration << ", and it occurs on Node: " << maxWaitingNode << "." << endl;
+}
+
+int Graph::path_Capacity(const list<int>& path) {
 
     vector<int> pathv;
-    for (int const &n: path) {
-        pathv.push_back(n);
+    for (int const &k: path) {
+        pathv.push_back(k);
     }
 
     int capacity = INF;
@@ -407,13 +544,17 @@ int Graph::path_Capacity(list<int> path) {
     return capacity;
 }
 
+Graph Graph::transposeGraph() {
 
+    Graph tGraph = Graph(n, true);
+    int num_node = 0;
 
+    for (const auto& k : nodes) {
+        for (auto e : k.adj) {
+            tGraph.addEdge(e.dest, num_node, e.capacity,e.time, e.flow);  //change init order
+        }
+        num_node++;
+    }
 
-
-
-
-
-
-
-
+    return tGraph;
+}

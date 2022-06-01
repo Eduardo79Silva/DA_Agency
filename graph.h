@@ -10,34 +10,40 @@
 #include <list>
 #include <iostream>
 #include <queue>
-
+#include <stack>
 
 using namespace std;
 
 /**
-     * Implementação de grafo.
-     */
+ * Implementação de grafo.
+ */
 
-class Graph {
-    struct Edge {
+class Graph
+{
+    struct Edge
+    {
         int src;
-        int dest;   // Destination node
+        int dest; // Destination node
         int capacity;
-        int time;  // Two integer weights (capacity, time)
+        int time; // Two integer weights (capacity, time)
         int flow;
         int resCap;
     };
 
-    struct Node {
+    struct Node
+    {
         int id;
-        list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
-        std::list<Edge> res;  // Residual
+        list<Edge> adj;      // The list of outgoing edges (to adjacent nodes)
+        std::list<Edge> res; // Residual
         int dist;
         int capacity;
         int pred;
         bool visited;
         int ES;
+        int EF;
+        int LF;
         int eDeg;
+        int sDeg;
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
@@ -49,29 +55,27 @@ class Graph {
      * @param s O nó de início
      */
 
-
-
 public:
     // Constructor: nr nodes and direction (default: undirected)
     Graph(int nodes, bool dir = false);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, int capacity = 1, int flow = 0, int time = 1, int resCap= 1);
+    void addEdge(int src, int dest, int capacity = 1, int flow = 0, int time = 1, int resCap = 1);
 
-    //to remove
+    // to remove
     void print() const;
 
     void dijkstra(int s);
 
-     /**
+    /**
      * Algoritmo de Breadth First Search entre dois nós
      * @param a O nó de início
      * @param b O nó de fim
      */
     void BFS(int a, int b);
 
-
-    vector<Node> getNodes() {
+    vector<Node> getNodes()
+    {
         return nodes;
     }
 
@@ -79,14 +83,11 @@ public:
 
     vector<int> get_path(int a, int b);
 
-    int path_Capacity(list<int> path);
-
+    int path_Capacity(const list<int> &path);
 
     int edmondKarpFlux(int start, int end);
 
     bool relax(Node v, Node *w, int weight);
-
-
 
     std::pair<int, vector<Graph::Edge>> bfs1(int v, int b);
 
@@ -95,7 +96,18 @@ public:
     Graph resGraph();
 
     int correctGroupSize(int start, int end, int increment);
-    int earlestStart();
+
+    int earliestStart();
+
+    void latestFinish();
+
+    void topSort(int start, std::stack<int> &stack);
+
+    int longestPath(int start, int end);
+
+    Graph transposeGraph();
+
+    void node_wait_times(int start, int end);
 };
 
 #endif
