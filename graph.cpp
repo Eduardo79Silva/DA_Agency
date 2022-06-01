@@ -55,8 +55,7 @@ void Graph::dijkstra(int s) {
         nodes[v].visited = false;
     }
     nodes[s].dist = 0;
-    nodes[s].pred = s;
-    q.insert(s, nodes[s].dist);
+    q.decreaseKey(s, 0);
     nodes[s].pred = s;
     while (q.getSize()>0) {
         int u = q.removeMin();
@@ -152,12 +151,12 @@ int Graph::edmondKarpFlux(int start, int end) {
 
     //determine residual grid
     resGrid = resGraph();
-    resGrid.dijkstra(start);
+    resGrid.BFS(start, end);
     path = resGrid.get_path(start, end);
     Node destination = resGrid.nodes[end];
 
     //while there is a path in the Residual Grid
-    while(destination.visited && !resGrid.nodes[start].adj.empty()){
+    while(destination.visited ){
 
         //find minimun Cf in path
         for(int i = 0; i < path.size()-1; i++){
@@ -184,7 +183,7 @@ int Graph::edmondKarpFlux(int start, int end) {
 
         //determine residual grid
         resGrid = resGraph();
-        resGrid.dijkstra(start);
+        resGrid.BFS(start, end);
         path = resGrid.get_path(start, end);
         destination = resGrid.nodes[end];
     }
@@ -231,6 +230,84 @@ Graph Graph::resGraph() {
     return residualGrid;
 }
 
+
+int Graph::correctGroupSize(int start, int end, int increment) {
+    Node start_Node;
+    std::vector<int> path;
+    int resCap = INF;
+    Graph resGrid = Graph(n, true);
+    int startFlow = 0;
+    int endFlow = 0;
+    for(auto e : nodes[start].adj){
+        startFlow += e.flow;
+    }
+    endFlow = startFlow;
+
+
+
+    //determine residual grid
+    resGrid = resGraph();
+    resGrid.BFS(start, end);
+    path = resGrid.get_path(start, end);
+    Node dest = resGrid.nodes[end];
+
+    //while there is a path in the Residual Grid
+    while(dest.visited && (endFlow - startFlow < increment)){
+
+        //find minimun Cf in path
+        for(int i = 0; i < path.size()-1; i++){
+            for(Edge edge : (resGrid.nodes[path[i]].adj)) {
+                //found the edge of the path
+                if(nodes[edge.dest].id == resGrid.nodes[path[i+1]].id) {
+                    resCap = std::min(edge.resCap, resCap);
+                }
+            }
+        }
+
+        for(int i = 0; i < path.size()-1; i++){
+            for(Edge &edge: nodes[path[i]].adj){
+                //found the edge of the path
+                if(nodes[edge.dest].id == nodes[path[i+1]].id){
+                    int tempFlow = 0;
+                    for(auto e : nodes[start].adj){
+                        tempFlow += e.flow;
+                    }
+                    if(tempFlow + resCap > increment){
+                        edge.flow = increment + edge.flow;
+
+                    }
+                    else{
+                        edge.flow = resCap + edge.flow;
+                    }
+                    edge.resCap = edge.capacity - edge.flow;
+                    if(edge.resCap < 0){
+                        edge.resCap = 0;
+                    }
+                }
+            }
+        }
+
+        //determine residual grid
+        resGrid = resGraph();
+        resGrid.BFS(start, end);
+        path = resGrid.get_path(start, end);
+        dest = resGrid.nodes[end];
+
+        start_Node = nodes[start];
+        endFlow = 0;
+        for(Edge edge: start_Node.adj){
+            endFlow+= edge.flow;
+        }
+    }
+
+
+
+    if(endFlow - startFlow < increment){
+        return -1;
+    }
+    return endFlow - startFlow;
+}
+
 //sets all fluxes to 0
 void Graph::reset_Flux() {
     for(auto& i : nodes){
@@ -250,7 +327,6 @@ void Graph::BFS(int a, int b) {
     nodes[a].visited=true;
     while (!q.empty()) { // while there are still unvisited nodes
         int u = q.front(); q.pop();
-        cout << u << " "; // show node order
         for (auto e : nodes[u].adj) {
             int w = e.dest;
             if (!nodes[w].visited && e.resCap > 0) {
@@ -265,7 +341,6 @@ void Graph::BFS(int a, int b) {
             }
         }
     }
-    cout << endl;
 
 }
 

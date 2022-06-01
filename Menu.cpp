@@ -83,7 +83,7 @@ void IntermediateMenu::display() {
 
     switch ((char) option) {
         case '1':
-            cout << Network::getInstance()->getNetwork()->edmondKarpFlux(1,2) << endl;
+            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 2) << endl;
             break;
         case '2':
             setNextMenu(new Scenery2_Menu());

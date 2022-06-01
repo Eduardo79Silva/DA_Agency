@@ -91,6 +91,8 @@ public:
     void reset_Flux();
 
     Graph resGraph();
+
+    int correctGroupSize(int start, int end, int increment);
 };
 
 #endif
