@@ -13,9 +13,9 @@ Graph::Graph(int num, bool dir) : n(num), hasDir(dir), nodes(num+1) {
 }
 
 // Add edge from source to destination with a certain weight
-void Graph::addEdge(int src, int dest, int capacity, int flow, int time) {
+void Graph::addEdge(int src, int dest, int capacity, int flow, int time, int resCap) {
     if (src<1 || src>n || dest<1 || dest>n) return;
-    nodes[src].adj.push_back({dest, capacity, flow, time, capacity});
+    nodes[src].adj.push_back({src, dest, capacity, time, flow, resCap});
     nodes[dest].res.push_back({src, 0, time});
     if (!hasDir) nodes[dest].adj.push_back({src, capacity, time});  //src to dest?
 }
@@ -64,7 +64,7 @@ void Graph::dijkstra(int s) {
         nodes[u].visited = true;
         for (auto e : nodes[u].adj) {
             int v = e.dest;
-            if (!nodes[v].visited && nodes[u].dist + 1 < nodes[v].dist) {
+            if (!nodes[v].visited && nodes[u].dist + 1 < nodes[v].dist && e.resCap > 0) {
                 nodes[v].dist = nodes[u].dist + 1;
                 q.decreaseKey(v, nodes[v].dist);
                 nodes[v].pred = u;
@@ -108,23 +108,37 @@ void Graph::maximumFlowPath(int s) {
 
 vector<int> Graph::get_path(int a, int b) {
 
-    vector<int> path;
-    int tmp;
 
-    if (nodes[b].capacity == 0) return path;
+    list<int> path;
+    int tmp;
+    if(!nodes[b].visited){
+        vector<int> pathv;
+        return pathv;
+    }
     path.push_back(b);
     int v = b;
     while (v != a) {
+        if(v == 0){
+            vector<int> pathv;
+            return pathv;
+        }
         tmp = nodes[v].pred;
         v = tmp;
 
         // POSSIVELMENTE ALTERAR -----------------------------------------------------------------------
-        path.emplace(path.begin()); // IMPORTANTE FAZER PUSH_FRONT
+        path.push_front(v); // IMPORTANTE FAZER PUSH_FRONT
+    }
+    vector<int> pathv;
+    for (int const &n: path) {
+        pathv.push_back(n);
     }
 
-    for (auto elem : path) cout << "[" << elem << "]" << endl;
+    for(auto elem : pathv) cout << "[" << elem << "] " ;
 
-    return path;
+    cout << endl;
+
+
+    return pathv;
 
 }
 
@@ -138,7 +152,7 @@ int Graph::edmondKarpFlux(int start, int end) {
 
     //determine residual grid
     resGrid = resGraph();
-    resGrid.BFS(start, end);
+    resGrid.dijkstra(start);
     path = resGrid.get_path(start, end);
     Node destination = resGrid.nodes[end];
 
@@ -146,7 +160,7 @@ int Graph::edmondKarpFlux(int start, int end) {
     while(destination.visited){
 
         //find minimun Cf in path
-        for(int i = 1; i <= path.size(); i++){
+        for(int i = 0; i < path.size()-1; i++){
             for(Edge edge : (resGrid.nodes[path[i]].adj)) {
                 //found the edge of the path
                 if(nodes[edge.dest].id == resGrid.nodes[path[i+1]].id) {
@@ -155,18 +169,22 @@ int Graph::edmondKarpFlux(int start, int end) {
             }
         }
 
-        for(int i = 1; i <= path.size(); i++){
+        for(int i = 0; i < path.size()-1; i++){
             for(Edge &edge: nodes[path[i]].adj){
                 //found the edge of the path
                 if(nodes[edge.dest].id == nodes[path[i+1]].id){
                     edge.flow = resCap + edge.flow;
+                    edge.resCap = edge.capacity - edge.flow;
+                    if(edge.resCap < 0){
+                        edge.resCap = 0;
+                    }
                 }
             }
         }
 
         //determine residual grid
         resGrid = resGraph();
-        resGrid.BFS(start, end);
+        resGrid.dijkstra(start);
         path = resGrid.get_path(start, end);
         destination = resGrid.nodes[end];
     }
@@ -177,7 +195,18 @@ int Graph::edmondKarpFlux(int start, int end) {
         maxFlux+= edge.flow;
     }
 
+    cout << maxFlux;
     return maxFlux;
+}
+
+inline bool Graph::relax(Node v, Node *w, int weight) {
+    if (v.dist + weight < w->dist) {
+        w->dist= v.dist + weight;
+        w->pred = v.id;
+        return true;
+    }
+    else
+        return false;
 }
 
 
@@ -185,20 +214,22 @@ Graph Graph::resGraph() {
     Graph residualGrid = Graph(n, true);
     //add all vertexes
     for(const auto& node : nodes){
-        residualGrid.nodes.push_back(node);
+        Node newNode;
+        newNode.id = node.id;
+        residualGrid.nodes.push_back(newNode);
     }
-    for(const Node& node : nodes){
-        for(Edge edge : node.adj){
+    for(Node& node : nodes){
+        for(Edge& edge : node.adj){
             //Cf(u,v)
-            if(edge.capacity - edge.flow > 0) residualGrid.addEdge(node.id, nodes[edge.dest].id, edge.time, edge.capacity, edge.capacity - edge.flow);
+            if(edge.capacity - edge.flow > 0) residualGrid.addEdge(node.id, nodes[edge.dest].id, edge.capacity, edge.flow, edge.time, edge.capacity -edge.flow);
         }
     }
 
-    for(const Node& node : nodes){
-        for(Edge edge : node.adj){
+    for(Node& node : nodes){
+        for(Edge& edge : node.adj){
             //Cf(v,u)
             // É mesmo suposto ser ao contrário
-            if(edge.flow > 0) residualGrid.addEdge(nodes[edge.dest].id ,node.id, edge.time, edge.capacity, edge.flow);
+            if(edge.flow > 0) residualGrid.addEdge(nodes[edge.dest].id ,node.id, edge.capacity, 0, edge.time, edge.flow);
         }
     }
     return residualGrid;
@@ -206,9 +237,9 @@ Graph Graph::resGraph() {
 
 //sets all fluxes to 0
 void Graph::reset_Flux() {
-    for(const auto& i : nodes){
-        for(auto edge: i.adj){
-            edge.flow = 0;
+    for(auto& i : nodes){
+        for(auto itr = i.adj.begin(); itr != i.adj.end() ; itr++){
+            itr->flow = 0;
         }
     }
 }
