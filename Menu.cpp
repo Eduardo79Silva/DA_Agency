@@ -17,6 +17,26 @@ using namespace std;
 #endif
 
 
+
+void display_scen1_description() {
+    cout << "[1.1] Maximizes the dimension of the group and indicates any of the available paths." << endl;
+    cout << "[1.2] Maximizes the dimension of the group, and minimizes the number of transport\n"
+            "changes, without giving priority to one of the criteria, displaying both optimal solutions \n"
+            "That means that a bigger group can be transported if it admits more transport changes, \n"
+            "or if you want less transport changes, the dimension of the group can be smaller. " << endl;
+}
+
+void display_scen2_description() {
+    cout << "[2.1] Determines a path for a group, given it's size. " << endl;
+    cout << "[2.2] Corrects an path, if necessary, so the dimension of a given group (from 2.1) \n"
+            "can expand a given number of units" << endl;
+    cout << "[2.3] Determines the maximum dimension of a group and a path. " << endl;
+    cout << "[2.4] Starting from a path that is a acyclic graph, determine the minimum time \n"
+            "that it would take the group reunite again at the destination." << endl;
+    cout << "[2.5] Given the 2.4 conditions, admiting that the elements of the group depart \n"
+            "from the same place at the same time (earliest time possible), indicate the maximum \n"
+            "wait time and in which places there were elements waiting." << endl;
+}
 Menu::Menu() = default;;
 
 Menu::~Menu() = default;
@@ -70,13 +90,15 @@ void IntermediateMenu::display() {
 
     cout << std::endl;
     cout << "_____________________________________" << endl;
-    cout << "|             MAIN MENU             |" << endl;
+    cout << "|      SCENERY CHOOSING MENU        |" << endl;
     cout << "|___________________________________|" << endl;
     cout << "|   Select your scenery:            |" << endl;
     cout << "|                                   |" << endl;
-    cout << "|   [1] Scenery 1                   |" << endl;
-    cout << "|   [2] Scenery 2                   |" << endl;
-    cout << "|   [3] Teste 2.5                   |" << endl;
+    cout << "|   [1] Scenery 1: Groups that      |" << endl;
+    cout << "|   will not separate               |" << endl;
+    cout << "|                                   |" << endl;
+    cout << "|   [2] Scenery 2: Groups that      |" << endl;
+    cout << "|   can separate from each other    |" << endl;
     cout << "|                                   |" << endl;
     cout << "|   [0] Exit                        |" << endl;
     cout << "|___________________________________|" << endl;
@@ -86,26 +108,15 @@ void IntermediateMenu::display() {
 
     switch ((char) option) {
         case '1':
-
-            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 13) << endl;
+            setNextMenu(new Scenery1_Menu());
             break;
         case '2':
-            cout << "min dur: "  << Network::getInstance()->getNetwork()->earliestStart() <<endl;
-            Network::getInstance()->getNetwork()->latestFinish();
-
-            for (int i = 1; i <= Network::getInstance()->getNetwork()->getNodes().size() - 1; i++) {
-                if (Network::getInstance()->getNetwork()->getNodes()[i].dist != std::numeric_limits<int>::min())
-                    cout << "ES: " << Network::getInstance()->getNetwork()->getNodes()[i].ES << " LF: " << Network::getInstance()->getNetwork()->getNodes()[i].LF << endl;
-            }
-            break;
-        case '3':
-            Network::getInstance()->getNetwork()->node_wait_times(1,7);
+            setNextMenu(new Scenery2_Menu());
             break;
         case '0':
             setNextMenu(nullptr);
             break;
         default: std::cout << "Invalid Input \n:";
-            system("pause");
     }
 }
 
@@ -113,7 +124,7 @@ Scenery1_Menu::Scenery1_Menu() : Menu() {}
 
 void Scenery1_Menu::display() {
 
-    int option;
+    char option;
 
     using namespace std;
 
@@ -122,8 +133,10 @@ void Scenery1_Menu::display() {
     cout << "|             Scenery 1             |" << endl;
     cout << "|___________________________________|" << endl;
     cout << "|                                   |" << endl;
-    cout << "|   [1] Exec                        |" << endl;
-    cout << "|   [2] Print                       |" << endl;
+    cout << "|   [.1]                            |" << endl;
+    cout << "|   [.2]                            |" << endl;
+    cout << "|                                   |" << endl;
+    cout << "|   [h] Description of problems     |" << endl;
     cout << "|                                   |" << endl;
     cout << "|   [0] Exit                        |" << endl;
     cout << "|___________________________________|" << endl;
@@ -131,13 +144,17 @@ void Scenery1_Menu::display() {
     std::cout << "Please input your choice: " << std::endl << std::flush;
     std::cin >> option;
 
-    switch (option) {
+    switch ((char) option) {
         case 1: {
 
             break;
         }
         case 2:
             /*Application::getInstance()->printDeliveryMan(false);*/
+            sleep(4);
+            break;
+        case 'h':
+            display_scen1_description();
             sleep(4);
             break;
         case 0: return;
@@ -158,8 +175,13 @@ void Scenery2_Menu::display() {
     cout << "|             Scenery 2             |" << endl;
     cout << "|___________________________________|" << endl;
     cout << "|                                   |" << endl;
-    cout << "|   [1] Exec                        |" << endl;
-    cout << "|   [2] Print                       |" << endl;
+    cout << "|   [.1]                            |" << endl;
+    cout << "|   [.2]                            |" << endl;
+    cout << "|   [.3]                            |" << endl;
+    cout << "|   [.4]                            |" << endl;
+    cout << "|   [.5]                            |" << endl;
+    cout << "|                                   |" << endl;
+    cout << "|   [h] Description of problems     |" << endl;
     cout << "|                                   |" << endl;
     cout << "|   [0] Exit                        |" << endl;
     cout << "|___________________________________|" << endl;
@@ -169,12 +191,26 @@ void Scenery2_Menu::display() {
 
     switch ((char) option) {
         case '1': {
-            /*this->application->scenery2();*/
-            sleep(4);
+            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 13) << endl;
+
             break;
         }
-        case '2':
-            /*Application::getInstance()->printDeliveryMan(true);*/
+        case '4':
+            Network::getInstance()->getNetwork()->longestPath(1,4);
+            sleep(4);
+            break;
+        case '5':
+            cout << "min dur: "  << Network::getInstance()->getNetwork()->earliestStart() <<endl;
+            Network::getInstance()->getNetwork()->latestFinish();
+
+            for (int i = 1; i <= Network::getInstance()->getNetwork()->getNodes().size() - 1; i++) {
+                if (Network::getInstance()->getNetwork()->getNodes()[i].dist != std::numeric_limits<int>::min())
+                    cout << "ES: " << Network::getInstance()->getNetwork()->getNodes()[i].ES << " LF: " << Network::getInstance()->getNetwork()->getNodes()[i].LF << endl;
+            }
+            sleep(4);
+            break;
+        case 'h':
+            display_scen2_description();
             sleep(4);
             break;
         case '0': return;

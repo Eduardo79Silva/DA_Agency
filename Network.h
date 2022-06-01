@@ -21,6 +21,8 @@ protected:
 
     Graph * network;
 
+    bool should_Pop;
+
 public:
     Graph * getNetwork() const;
 
@@ -39,6 +41,15 @@ public:
     Graph *  readGraph();
     void readData(const string& filestring);
     //Graph toGraph();
+
+
+    void setShouldPop(bool b) {
+        this->should_Pop = b;
+    }
+
+    bool getShouldPop() {
+        return this->should_Pop;
+    }
 };
 
 

@@ -17,12 +17,13 @@ void Starter::start() {
 
         if (menuStack.top()->getNextMenu() != nullptr) {
             Menu * tmp = menuStack.top()->getNextMenu();
-            menuStack.top()->setNextMenu(nullptr);
+
             menuStack.push(tmp);
+            menuStack.top()->setNextMenu(nullptr);
         }
-        else {
-            delete menuStack.top();
+        if (application->getShouldPop()) {
             menuStack.pop();
+            application->setShouldPop(false);
         }
     }
 }
