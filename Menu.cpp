@@ -93,7 +93,7 @@ void IntermediateMenu::display() {
             cout << "min dur: "  << Network::getInstance()->getNetwork()->earliestStart() <<endl;
             Network::getInstance()->getNetwork()->latestFinish();
 
-            for (int i = 1; i <= Network::getInstance()->getNetwork()->getNodes().size(); i++) {
+            for (int i = 1; i <= Network::getInstance()->getNetwork()->getNodes().size() - 1; i++) {
                 if (Network::getInstance()->getNetwork()->getNodes()[i].dist != std::numeric_limits<int>::min())
                     cout << "ES: " << Network::getInstance()->getNetwork()->getNodes()[i].ES << " LF: " << Network::getInstance()->getNetwork()->getNodes()[i].LF << endl;
             }
