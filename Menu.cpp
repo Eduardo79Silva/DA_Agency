@@ -4,6 +4,8 @@
 
 #include "Menu.h"
 
+#include "limits"
+
 using namespace std;
 
 #ifdef _WIN32
@@ -74,6 +76,7 @@ void IntermediateMenu::display() {
     cout << "|                                   |" << endl;
     cout << "|   [1] Scenery 1                   |" << endl;
     cout << "|   [2] Scenery 2                   |" << endl;
+    cout << "|   [3] Teste 2.5                   |" << endl;
     cout << "|                                   |" << endl;
     cout << "|   [0] Exit                        |" << endl;
     cout << "|___________________________________|" << endl;
@@ -83,10 +86,20 @@ void IntermediateMenu::display() {
 
     switch ((char) option) {
         case '1':
-            cout << Network::getInstance()->getNetwork()->earlestStart() << endl;
+            Network::getInstance()->getNetwork()->maximumFlowPath(1);
+            cout << Network::getInstance()->getNetwork()->longestPath(1,4) << endl;
             break;
         case '2':
-            setNextMenu(new Scenery2_Menu());
+            cout << "min dur: "  << Network::getInstance()->getNetwork()->earliestStart() <<endl;
+            Network::getInstance()->getNetwork()->latestFinish();
+
+            for (int i = 1; i <= Network::getInstance()->getNetwork()->getNodes().size(); i++) {
+                if (Network::getInstance()->getNetwork()->getNodes()[i].dist != std::numeric_limits<int>::min())
+                    cout << "ES: " << Network::getInstance()->getNetwork()->getNodes()[i].ES << " LF: " << Network::getInstance()->getNetwork()->getNodes()[i].LF << endl;
+            }
+            break;
+        case '3':
+            Network::getInstance()->getNetwork()->node_wait_times(1,7);
             break;
         case '0':
             setNextMenu(nullptr);

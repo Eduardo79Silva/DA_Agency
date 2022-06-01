@@ -10,6 +10,7 @@
 #include <list>
 #include <iostream>
 #include <queue>
+#include <stack>
 
 
 using namespace std;
@@ -36,7 +37,10 @@ class Graph {
         int pred;
         bool visited;
         int ES;
+        int EF;
+        int LF;
         int eDeg;
+        int sDeg;
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
@@ -55,7 +59,7 @@ public:
     Graph(int nodes, bool dir = false);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, int capacity = 1, int flow = 0, int time = 1);
+    void addEdge(int src, int dest, int capacity = 1, int flow = 0, int time = 1, int resCap = 1);
 
     //to remove
     void print() const;
@@ -78,19 +82,26 @@ public:
 
     vector<int> get_path(int a, int b);
 
-    int path_Capacity(list<int> path);
+    int path_Capacity(const list<int>& path);
 
 
     int edmondKarpFlux(int start, int end);
-
-
-    std::pair<int, vector<Graph::Edge>> bfs1(int v, int b);
 
     void reset_Flux();
 
     Graph resGraph();
 
-    int earlestStart();
+    int earliestStart();
+
+    void latestFinish();
+
+    void topSort(int start, std::stack<int> &stack);
+
+    int longestPath(int start, int end);
+
+    Graph transposeGraph();
+
+    void node_wait_times(int start, int end);
 };
 
 #endif
