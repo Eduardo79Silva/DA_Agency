@@ -511,16 +511,9 @@ void Graph::node_wait_times(int start, int end) {
             cout << "Node: " << i << ", Waiting: " << nodes[i].LF - nodes[i].ES << endl;
 
             if ((nodes[i].LF - nodes[i].ES) > maxDuration) {
-                for (Edge e : nodes[i].adj) {
-                    if (e.flow != 0) {
                         maxDuration = (nodes[i].LF - nodes[i].ES);
                         maxWaitingNode = i;
-                    }
-                }
-
             }
-
-            if (i == end) break;
         }
     }
 
@@ -551,7 +544,7 @@ Graph Graph::transposeGraph() {
 
     for (const auto& k : nodes) {
         for (auto e : k.adj) {
-            tGraph.addEdge(e.dest, num_node, e.capacity,e.time, e.flow);  //change init order
+            tGraph.addEdge(e.dest, num_node, e.capacity, e.flow, e.time);  //change init order
         }
         num_node++;
     }

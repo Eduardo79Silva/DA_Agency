@@ -87,13 +87,13 @@ void IntermediateMenu::display() {
     switch ((char) option) {
         case '1':
 
-            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 2) << endl;
+            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 13) << endl;
             break;
         case '2':
             cout << "min dur: "  << Network::getInstance()->getNetwork()->earliestStart() <<endl;
             Network::getInstance()->getNetwork()->latestFinish();
 
-            for (int i = 1; i <= Network::getInstance()->getNetwork()->getNodes().size(); i++) {
+            for (int i = 1; i <= Network::getInstance()->getNetwork()->getNodes().size() - 1; i++) {
                 if (Network::getInstance()->getNetwork()->getNodes()[i].dist != std::numeric_limits<int>::min())
                     cout << "ES: " << Network::getInstance()->getNetwork()->getNodes()[i].ES << " LF: " << Network::getInstance()->getNetwork()->getNodes()[i].LF << endl;
             }
