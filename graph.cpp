@@ -157,7 +157,7 @@ int Graph::edmondKarpFlux(int start, int end) {
     Node destination = resGrid.nodes[end];
 
     //while there is a path in the Residual Grid
-    while(destination.visited){
+    while(destination.visited && !resGrid.nodes[start].adj.empty()){
 
         //find minimun Cf in path
         for(int i = 0; i < path.size()-1; i++){
@@ -195,18 +195,7 @@ int Graph::edmondKarpFlux(int start, int end) {
         maxFlux+= edge.flow;
     }
 
-    cout << maxFlux;
     return maxFlux;
-}
-
-inline bool Graph::relax(Node v, Node *w, int weight) {
-    if (v.dist + weight < w->dist) {
-        w->dist= v.dist + weight;
-        w->pred = v.id;
-        return true;
-    }
-    else
-        return false;
 }
 
 
@@ -214,14 +203,19 @@ Graph Graph::resGraph() {
     Graph residualGrid = Graph(n, true);
     //add all vertexes
     for(const auto& node : nodes){
-        Node newNode;
-        newNode.id = node.id;
+        Node newNode = node;
+        newNode.adj = {};
+        newNode.visited = false;
         residualGrid.nodes.push_back(newNode);
+
     }
     for(Node& node : nodes){
         for(Edge& edge : node.adj){
             //Cf(u,v)
-            if(edge.capacity - edge.flow > 0) residualGrid.addEdge(node.id, nodes[edge.dest].id, edge.capacity, edge.flow, edge.time, edge.capacity -edge.flow);
+            if(edge.capacity - edge.flow > 0) {
+                residualGrid.addEdge(node.id, nodes[edge.dest].id, edge.capacity, edge.flow, edge.time,
+                                     edge.capacity - edge.flow);
+            }
         }
     }
 
@@ -229,7 +223,9 @@ Graph Graph::resGraph() {
         for(Edge& edge : node.adj){
             //Cf(v,u)
             // É mesmo suposto ser ao contrário
-            if(edge.flow > 0) residualGrid.addEdge(nodes[edge.dest].id ,node.id, edge.capacity, 0, edge.time, edge.flow);
+            if(edge.flow > 0) {
+                residualGrid.addEdge(nodes[edge.dest].id, node.id, edge.capacity, 0, edge.time, edge.flow);
+            }
         }
     }
     return residualGrid;
