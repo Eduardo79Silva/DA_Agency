@@ -35,6 +35,8 @@ class Graph {
         int capacity;
         int pred;
         bool visited;
+        int ES;
+        int eDeg;
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
@@ -87,6 +89,8 @@ public:
     void reset_Flux();
 
     Graph resGraph();
+
+    int earlestStart();
 };
 
 #endif

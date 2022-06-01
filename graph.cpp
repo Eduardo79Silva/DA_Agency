@@ -242,6 +242,52 @@ void Graph::BFS(int a, int b) {
 
 }
 
+int Graph::earlestStart() {
+    int minDuration = -1;
+    int vf = 0;
+
+    queue<int> S;
+
+    for (int i = 1; i<=n; i++) {
+        nodes[i].pred = 0;
+        nodes[i].ES = 0;
+        nodes[i].eDeg = 0;
+    }
+    for (int i = 1; i<=n; i++) {
+        for (Graph::Edge edge : nodes[i].adj) {
+            nodes[edge.dest].eDeg += 1;
+        }
+    }
+    for (int i = 1; i<=n; i++) {
+        if (nodes[i].eDeg == 0) S.push(i);
+    }
+
+    while(!S.empty()) {
+        int v = S.front();
+        S.pop();
+
+        if (minDuration < nodes[v].ES) {
+            minDuration = nodes[v].ES;
+            vf = v;
+        }
+
+        for (auto k : nodes[v].adj) {
+            if (nodes[k.dest].ES < nodes[v].ES + k.time) {
+                nodes[k.dest].ES = nodes[v].ES + k.time;
+                nodes[k.dest].pred = v;
+            }
+
+            nodes[k.dest].eDeg = nodes[k.dest].eDeg - 1;
+
+            if (nodes[k.dest].eDeg == 0) {
+                S.push(k.dest);
+            }
+        }
+    }
+
+    return minDuration;
+}
+
 int Graph::path_Capacity(list<int> path) {
 
     vector<int> pathv;
