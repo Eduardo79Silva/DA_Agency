@@ -273,7 +273,7 @@ int Graph::correctGroupSize(int start, int end, int increment) {
                         tempFlow += e.flow;
                     }
                     if(tempFlow + resCap > increment){
-                        edge.flow = increment + edge.flow;
+                        edge.flow = (increment)-tempFlow + edge.flow;
 
                     }
                     else{
