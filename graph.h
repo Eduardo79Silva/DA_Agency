@@ -20,6 +20,7 @@ using namespace std;
 
 class Graph {
     struct Edge {
+        int src;
         int dest;   // Destination node
         int capacity;
         int time;  // Two integer weights (capacity, time)
@@ -55,7 +56,7 @@ public:
     Graph(int nodes, bool dir = false);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, int capacity = 1, int flow = 0, int time = 1);
+    void addEdge(int src, int dest, int capacity = 1, int flow = 0, int time = 1, int resCap= 1);
 
     //to remove
     void print() const;
@@ -83,6 +84,9 @@ public:
 
     int edmondKarpFlux(int start, int end);
 
+    bool relax(Node v, Node *w, int weight);
+
+
 
     std::pair<int, vector<Graph::Edge>> bfs1(int v, int b);
 
@@ -90,6 +94,7 @@ public:
 
     Graph resGraph();
 
+    int correctGroupSize(int start, int end, int increment);
     int earlestStart();
 };
 

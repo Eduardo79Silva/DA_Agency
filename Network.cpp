@@ -54,7 +54,7 @@ Graph * Network::readGraph() {
         capacity = stoi(capacities);
         duration = stoi(durations);
         //cout << origin << "  -  " << destination << "  -  " << capacity << "  -  " << duration << endl;
-        net->addEdge(origin, destination, capacity, duration);  //alterar fields do grafo e métodos
+        net->addEdge(origin, destination, capacity,0, duration, capacity);  //alterar fields do grafo e métodos
     }
 
     return net;
