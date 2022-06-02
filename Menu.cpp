@@ -150,6 +150,10 @@ void Scenery1_Menu::display() {
 
     switch ((char) option) {
         case '1': {
+            int start = Network::getInstance()->askNodesInput("Please input the Start Node: ");
+            int end = Network::getInstance()->askNodesInput("Please input the End Node: ");
+
+            cout << start << "|" <<  end << endl;
 
             break;
         }

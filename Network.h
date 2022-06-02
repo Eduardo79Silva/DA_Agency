@@ -50,6 +50,31 @@ public:
     bool getShouldPop() {
         return this->should_Pop;
     }
+
+    int askNodesInput(const string& message) {
+        int input;
+        int n = network->getNodes().size();
+
+        bool validInput = true;
+        do
+        {
+            cout << message;
+
+            cin >> input;
+
+            if (input < 1 || input > n || cin.fail())
+            {
+                cout << "Invalid!" << endl;
+
+                cin.clear();
+                cin.ignore();
+                validInput = false;
+            } else {
+                validInput = true;
+                return input;
+            }
+        } while (true);
+    }
 };
 
 
