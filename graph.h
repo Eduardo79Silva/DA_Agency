@@ -82,7 +82,7 @@ public:
 
     void maximumFlowPath(int src);
 
-    vector<int> get_path(int a, int b);
+    vector<int> get_path(int a, int b, bool print);
 
     int path_Capacity(const vector<int> &path);
 

@@ -109,7 +109,7 @@ void Graph::maximumFlowPath(int s) {
 
 }
 
-vector<int> Graph::get_path(int a, int b) {
+vector<int> Graph::get_path(int a, int b, bool print) {
 
 
     list<int> path;
@@ -135,7 +135,7 @@ vector<int> Graph::get_path(int a, int b) {
         pathv.push_back(k);
     }
 
-    for(auto elem : pathv) cout << "[" << elem << "] " ;
+    if (print) {for(auto elem : pathv) cout << "[" << elem << "] " ;}
 
     cout << endl;
 
@@ -155,7 +155,7 @@ int Graph::edmondKarpFlux(int start, int end) {
     //determine residual grid
     resGrid = resGraph();
     resGrid.BFS(start, end);
-    path = resGrid.get_path(start, end);
+    path = resGrid.get_path(start, end, true);
     Node destination = resGrid.nodes[end];
 
     //while there is a path in the Residual Grid
@@ -187,7 +187,10 @@ int Graph::edmondKarpFlux(int start, int end) {
         //determine residual grid
         resGrid = resGraph();
         resGrid.BFS(start, end);
-        path = resGrid.get_path(start, end);
+        if (destination.visited) {
+            path = resGrid.get_path(start, end, true);
+        }
+        else {path = resGrid.get_path(start, end, false);}
         destination = resGrid.nodes[end];
         resCap = INF;
     }
@@ -258,7 +261,7 @@ int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
     //determine residual grid
     resGrid = resGraph();
     resGrid.BFS(start, end);
-    path = resGrid.get_path(start, end);
+    path = resGrid.get_path(start, end, true);
     Node dest = resGrid.nodes[end];
 
     //while there is a path in the Residual Grid
@@ -301,7 +304,7 @@ int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
         //determine residual grid
         resGrid = resGraph();
         resGrid.BFS(start, end);
-        path = resGrid.get_path(start, end);
+
         resCap = INF;
         dest = resGrid.nodes[end];
 
@@ -309,6 +312,12 @@ int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
         endFlow = 0;
         for(Edge edge: start_Node.adj){
             endFlow+= edge.flow;
+        }
+        if (dest.visited && (endFlow - startFlow < increment)) {
+            path = resGrid.get_path(start, end, true);
+        }
+        else {
+            path = resGrid.get_path(start, end, false);
         }
     }
 

@@ -160,14 +160,14 @@ void Scenery1_Menu::display() {
         case '2':
             cout << "Shortest path: ";
             Network::getInstance()->getNetwork()->dijkstra(1);
-            Network::getInstance()->getNetwork()->get_path(1, 4);
+            Network::getInstance()->getNetwork()->get_path(1, 4, true);
             cout << "Capacity: ";
-            cout << Network::getInstance()->getNetwork()->path_Capacity(Network::getInstance()->getNetwork()->get_path(1, 4));
+            cout << Network::getInstance()->getNetwork()->path_Capacity(Network::getInstance()->getNetwork()->get_path(1, 4, false));
             cout << "Max capacity path: ";
             Network::getInstance()->getNetwork()->maximumFlowPath(1);
-            Network::getInstance()->getNetwork()->get_path(1, 4);
+            Network::getInstance()->getNetwork()->get_path(1, 4, true);
             cout << "Capacity: ";
-            cout << Network::getInstance()->getNetwork()->path_Capacity(Network::getInstance()->getNetwork()->get_path(1, 4));
+            cout << Network::getInstance()->getNetwork()->path_Capacity(Network::getInstance()->getNetwork()->get_path(1, 4, false));
             sleep(4);
             break;
         case 'h':
