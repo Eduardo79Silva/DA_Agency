@@ -5,6 +5,7 @@
 #include <climits>
 #include <limits>
 #include <chrono>
+#include <set>
 
 #define INF (INT_MAX/2)
 
@@ -194,6 +195,8 @@ int Graph::edmondKarpFlux(int start, int end) {
     for(Edge edge: start_Node.adj){
         maxFlux+= edge.flow;
     }
+
+    cout << maxFlux << endl;
 
     return maxFlux;
 }
@@ -395,7 +398,7 @@ int Graph::earliestStart() {
         }
     }
 
-   cout << minDuration << endl;
+   /*cout << minDuration << endl;*/
 
     return minDuration;
 }
@@ -525,7 +528,7 @@ void Graph::latestFinish() {
 
 void Graph::node_wait_times(int start, int end) {
 
-    int maxDur = longestPath(start, end);
+    edmondKarpFlux(start, end);
     earliestStart();
     latestFinish();
 
@@ -535,20 +538,49 @@ void Graph::node_wait_times(int start, int end) {
     int maxDuration = 0, maxWaitingNode = 0, count_nodes = 0;
 
     for (int i = 1; i <= n; i++) {
-
-        if ((nodes[i].LF - nodes[i].ES) != 0) {
-            cout << "Node: " << i << ", Waiting: " << nodes[i].LF - nodes[i].ES << endl;
-
-            if ((nodes[i].LF - nodes[i].ES) > maxDuration) {
+        for (Edge edge : nodes[i].adj) {
+            if (edge.flow != 0) {
+                if ((nodes[edge.dest].LF - nodes[edge.dest].ES) != 0) {
+                    /*cout << "Node: " << i << ", Waiting: " << nodes[i].LF - nodes[i].ES << endl;*/
+                    if ((nodes[edge.dest].LF - nodes[edge.dest].ES) > maxDuration) {
                         maxDuration = (nodes[i].LF - nodes[i].ES);
                         maxWaitingNode = i;
+                    }
+
+
+                    nodes[edge.dest].visited = true;
+                }
+            }
+
+        }
+    }
+    std::vector<int> biggest;
+    std::set<int> biggest2;
+    /*for (int i = 1; i <= n; i++) if ((nodes[i].LF - nodes[i].ES) == maxDuration) count_nodes++;*/
+    for (int i = 1; i <= n; i++) {
+        for (Edge edge: nodes[i].adj) {
+            if (edge.flow != 0) {
+                if ((nodes[edge.dest].LF - nodes[edge.dest].ES) == maxDuration) {
+                    count_nodes++;
+                    biggest.push_back(edge.dest);
+                    biggest2.emplace(edge.dest);
+                }
             }
         }
     }
 
-    for (int i = 1; i <= n; i++) if ((nodes[i].LF - nodes[i].ES) == maxDur) count_nodes++;
-
     std::cout << "The largest waiting time was: " << maxDuration << ". It happened: " << count_nodes << endl;
+    for (auto l : biggest) {
+        cout << "Node: " <<  l << endl;
+    }
+
+    cout << "-----------------------------" << endl;
+
+    for (auto l : biggest2) {
+        cout << "Node: " <<  l << endl;
+    }
+    std::cout << "The largest waiting time was: " << maxDuration << ". It happened: " << biggest2.size() << endl;
+
 
 }
 

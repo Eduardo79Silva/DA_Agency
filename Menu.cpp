@@ -207,7 +207,7 @@ void Scenery2_Menu::display() {
             cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 2, true) << endl;
             break;
         case '3':
-            Network::getInstance()->getNetwork()->edmondKarpFlux(1,300);
+            Network::getInstance()->getNetwork()->edmondKarpFlux(1,2);
             sleep(4);
             break;
         case '4':
@@ -215,7 +215,7 @@ void Scenery2_Menu::display() {
             sleep(4);
             break;
         case '5':
-            Network::getInstance()->getNetwork()->node_wait_times(1,4);
+            Network::getInstance()->getNetwork()->node_wait_times(1,2);
             break;
         case 'h':
             display_scen2_description();
