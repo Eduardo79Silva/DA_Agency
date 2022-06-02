@@ -67,17 +67,19 @@ void MainMenu::display() {
         << setw(20 - to_string(i).length()) << left << i  << "|" << std::endl;
     }
     cout << "|                                   |" << endl;
-    cout << "|   [0] Exit                        |" << endl;
+    cout << "|   [E] Exit                        |" << endl;
     cout << "|___________________________________|" << endl;
 
     std::cout << "Please input your choice: " << std::endl << std::flush;
     std::cin >> option;
 
-    if (option >= 0 && option <= 11) {
+    if (option == 45 || option == 65) exit(0);
+    else if (option >= 1 && option <= 10) {
         application->readData(to_string(option));
         application->getNetwork()->print();
         setNextMenu(new IntermediateMenu());
     }
+    else std::cout << "Invalid Input \n:";
 }
 
 IntermediateMenu::IntermediateMenu() : Menu() {};
@@ -100,7 +102,7 @@ void IntermediateMenu::display() {
     cout << "|   [2] Scenery 2: Groups that      |" << endl;
     cout << "|   can separate from each other    |" << endl;
     cout << "|                                   |" << endl;
-    cout << "|   [0] Exit                        |" << endl;
+    cout << "|   [0] Return                      |" << endl;
     cout << "|___________________________________|" << endl;
 
     std::cout << "Please input your choice: " << std::endl << std::flush;
@@ -113,9 +115,10 @@ void IntermediateMenu::display() {
         case '2':
             setNextMenu(new Scenery2_Menu());
             break;
-        case '0':
-            setNextMenu(nullptr);
+        case '0': {
+            Network::getInstance()->setShouldPop(true);
             break;
+        }
         default: std::cout << "Invalid Input \n:";
     }
 }
@@ -138,18 +141,18 @@ void Scenery1_Menu::display() {
     cout << "|                                   |" << endl;
     cout << "|   [h] Description of problems     |" << endl;
     cout << "|                                   |" << endl;
-    cout << "|   [0] Exit                        |" << endl;
+    cout << "|   [0] Return                      |" << endl;
     cout << "|___________________________________|" << endl;
 
     std::cout << "Please input your choice: " << std::endl << std::flush;
     std::cin >> option;
 
     switch ((char) option) {
-        case 1: {
+        case '1': {
 
             break;
         }
-        case 2:
+        case '2':
             /*Application::getInstance()->printDeliveryMan(false);*/
             sleep(4);
             break;
@@ -157,7 +160,10 @@ void Scenery1_Menu::display() {
             display_scen1_description();
             sleep(4);
             break;
-        case 0: return;
+        case '0': {
+            Network::getInstance()->setShouldPop(true);
+            break;
+        }
         default: std::cout << "Invalid Input \n:";
             system("pause");
     }
@@ -183,7 +189,7 @@ void Scenery2_Menu::display() {
     cout << "|                                   |" << endl;
     cout << "|   [h] Description of problems     |" << endl;
     cout << "|                                   |" << endl;
-    cout << "|   [0] Exit                        |" << endl;
+    cout << "|   [0] Return                      |" << endl;
     cout << "|___________________________________|" << endl;
 
     std::cout << "Please input your choice: " << std::endl << std::flush;
@@ -195,8 +201,14 @@ void Scenery2_Menu::display() {
 
             break;
         }
+        case '2':
+            Network::getInstance()->getNetwork()->node_wait_times(1,4);
+        case '3':
+            Network::getInstance()->getNetwork()->earliestStart();
+            sleep(4);
+            break;
         case '4':
-            Network::getInstance()->getNetwork()->longestPath(1,4);
+            Network::getInstance()->getNetwork()->longestPath(1, 300);
             sleep(4);
             break;
         case '5':
@@ -213,7 +225,10 @@ void Scenery2_Menu::display() {
             display_scen2_description();
             sleep(4);
             break;
-        case '0': return;
+        case '0': {
+            Network::getInstance()->setShouldPop(true);
+            break;
+        }
         default: std::cout << "Invalid Input \n:";
             system("pause");
     }

@@ -23,6 +23,7 @@ void Starter::start() {
         }
         if (application->getShouldPop()) {
             menuStack.pop();
+            menuStack.top()->setNextMenu(nullptr);
             application->setShouldPop(false);
         }
     }

@@ -15,7 +15,7 @@ Network *Network::getInstance() {
 
 void Network::readData(const string& filestring) {
 
-    (stoi(filestring)>=0 && stoi(filestring)<=9) ? filepath = ".././Tests_B/in0" + filestring + "_b.txt" : ".././Tests_B/in" + filestring + "_b.txt";
+    (stoi(filestring)>=0 && stoi(filestring)<=9) ? filepath = ".././Tests_B/in0" + filestring + "_b.txt" : filepath = ".././Tests_B/in" + filestring + "_b.txt";
     readInfo();
     network = readGraph();
 }

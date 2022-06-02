@@ -4,6 +4,7 @@
 #include "graph.h"
 #include <climits>
 #include <limits>
+#include <chrono>
 
 #define INF (INT_MAX/2)
 
@@ -388,16 +389,7 @@ int Graph::earliestStart() {
         }
     }
 
-    std::stack<int> aux;
-    while (nodes[vf].pred) {
-        aux.push(vf);
-        vf = nodes[vf].pred;
-    }
-
-   /*while (!aux.empty()) {
-       cout << aux.top() << endl;
-       aux.pop();
-   }*/
+   cout << minDuration << endl;
 
     return minDuration;
 }
@@ -414,18 +406,27 @@ void Graph::topSort(int start, std::stack<int> &stack) {
 
 int Graph::longestPath(int start, int end) {
 
+    auto init = chrono::steady_clock::now();
+
+    if (start < 0 || end > n) {
+        cout << "Values of start or end out of bounds" << endl;
+        return 0;
+    }
+
+    edmondKarpFlux(start, end);
+
     int NINF = std::numeric_limits<int>::min();
 
     std::stack<int> aux_stack;
 
-    // init all nodes as non-visited
+// init all nodes as non-visited
     for (int i = 1; i <= n; i++) {
         nodes[i].visited = false;
         nodes[i].pred = -1;
     }
-    // store topo order
+// store topo order
     for (int i = 1; i <= n; i++) if (!nodes[i].visited) topSort(i, aux_stack);
-    // set all distances to inf
+// set all distances to inf
     for (int i = 1; i <= n; i++) nodes[i].dist = NINF;
 
     nodes[start].dist = 0;
@@ -439,7 +440,7 @@ int Graph::longestPath(int start, int end) {
         // adj
 
         if (nodes[node].dist != NINF) {
-            for (Edge edge : nodes[node].adj) {
+            for (Edge edge: nodes[node].adj) {
                 if (edge.flow != 0) {
                     dest = edge.dest;
 
@@ -452,11 +453,27 @@ int Graph::longestPath(int start, int end) {
         }
     }
 
-    /*int teste = end;
+    int teste = end;
+    stack<int> aux;
     while (nodes[teste].pred != -1) {
-        cout << nodes[teste].pred << " ",
+        aux.push(teste);
         teste = nodes[teste].pred;
-    }*/
+    }
+    aux.push(teste);
+
+    cout << endl << "Longest path: ";
+    while (aux.size() > 1) {
+        cout << "[" << aux.top() << "]" << "->";
+        aux.pop();
+    }
+    cout << "[" << aux.top() << "]" << endl;
+
+    cout << "Minimum time waiting for everyone at the end: " << nodes[end].dist << " units." << endl;
+
+    auto final = chrono::steady_clock::now();
+
+    cout << "Algorithm execution time: " << chrono::duration_cast<chrono::milliseconds>(final - init).count()
+         << " (milli seconds)." << endl;
 
     return nodes[end].dist;
 }
@@ -489,7 +506,9 @@ void Graph::latestFinish() {
             for (auto k : transposed.nodes[v].adj) {
                 if (transposed.nodes[k.dest].LF > (transposed.nodes[v].LF - k.time)) {
                     transposed.nodes[k.dest].LF = transposed.nodes[v].LF - k.time;
+                    transposed.nodes[k.dest].LS = transposed.nodes[v].LF - k.time;
                     nodes[k.dest].LF = nodes[v].LF - k.time;
+                    nodes[k.dest].LS = nodes[v].LF - k.time;
                 }
                 transposed.nodes[k.dest].sDeg = transposed.nodes[k.dest].sDeg - 1;
 
@@ -499,11 +518,15 @@ void Graph::latestFinish() {
 }
 
 void Graph::node_wait_times(int start, int end) {
-    maximumFlowPath(start);
+
+    int maxDur = longestPath(start, end);
     earliestStart();
     latestFinish();
 
-    int maxDuration = 0, maxWaitingNode = 0;
+
+    std::stack<int> maxWaiters;
+
+    int maxDuration = 0, maxWaitingNode = 0, count_nodes = 0;
 
     for (int i = 1; i <= n; i++) {
 
@@ -517,7 +540,10 @@ void Graph::node_wait_times(int start, int end) {
         }
     }
 
-    std::cout << "Biggest waiting time: " << maxDuration << ", and it occurs on Node: " << maxWaitingNode << "." << endl;
+    for (int i = 1; i <= n; i++) if ((nodes[i].LF - nodes[i].ES) == maxDur) count_nodes++;
+
+    std::cout << "The largest waiting time was: " << maxDuration << ". It happened: " << count_nodes << endl;
+
 }
 
 int Graph::path_Capacity(const list<int>& path) {

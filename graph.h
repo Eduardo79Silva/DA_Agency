@@ -42,6 +42,7 @@ class Graph
         int ES;
         int EF;
         int LF;
+        int LS;
         int eDeg;
         int sDeg;
     };
