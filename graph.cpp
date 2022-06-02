@@ -552,17 +552,17 @@ void Graph::node_wait_times(int start, int end) {
 
 }
 
-int Graph::path_Capacity(const list<int>& path) {
+int Graph::path_Capacity(const vector<int>& path) {
 
-    vector<int> pathv;
+    /*vector<int> pathv;
     for (int const &k: path) {
         pathv.push_back(k);
-    }
+    }*/
 
     int capacity = INF;
     for(int i = 0; i < path.size(); i++){
-        for(auto e : nodes[i].adj){
-            if(e.dest==pathv[i-1])
+        for(auto e : nodes[path[i]].adj){
+            if(e.dest==path[i+1])
                 capacity=min(capacity, e.capacity);
         }
     }
