@@ -84,7 +84,7 @@ public:
 
     vector<int> get_path(int a, int b);
 
-    int path_Capacity(const list<int> &path);
+    int path_Capacity(const vector<int> &path);
 
     int edmondKarpFlux(int start, int end);
 
