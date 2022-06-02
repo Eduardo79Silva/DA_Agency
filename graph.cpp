@@ -250,7 +250,10 @@ int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
         startFlow += e.flow;
     }
     endFlow = startFlow;
+
     int incrementTemp = increment;
+
+
 
     //determine residual grid
     resGrid = resGraph();
@@ -556,6 +559,7 @@ void Graph::node_wait_times(int start, int end) {
     }
 
     std::map<int, int> biggest;
+
 
     for (int i = 1; i <= n; i++) {
         for (Edge edge: nodes[i].adj) {
