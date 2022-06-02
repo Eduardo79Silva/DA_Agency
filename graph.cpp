@@ -232,7 +232,9 @@ Graph Graph::resGraph() {
 }
 
 
-int Graph::correctGroupSize(int start, int end, int increment) {
+int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
+
+
     Node start_Node;
     std::vector<int> path;
     int resCap = INF;
@@ -274,7 +276,7 @@ int Graph::correctGroupSize(int start, int end, int increment) {
                         tempFlow += e.flow;
                     }
                     if(tempFlow + resCap > increment){
-                        edge.flow = (increment)-tempFlow + edge.flow;
+                        edge.flow = (increment-tempFlow) + edge.flow;
 
                     }
                     else{
@@ -304,8 +306,12 @@ int Graph::correctGroupSize(int start, int end, int increment) {
 
 
     if(endFlow - startFlow < increment){
-        return -1;
+        if (correct) {
+            return -1;
+        }
+        return endFlow;
     }
+
     return endFlow - startFlow;
 }
 

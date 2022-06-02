@@ -96,7 +96,7 @@ public:
 
     Graph resGraph();
 
-    int correctGroupSize(int start, int end, int increment);
+    int correctGroupSize(int start, int end, int increment, bool correct);
 
     int earliestStart();
 
