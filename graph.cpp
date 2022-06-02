@@ -187,6 +187,7 @@ int Graph::edmondKarpFlux(int start, int end) {
         resGrid.BFS(start, end);
         path = resGrid.get_path(start, end);
         destination = resGrid.nodes[end];
+        resCap = INF;
     }
 
     start_Node = nodes[start];
@@ -224,7 +225,8 @@ Graph Graph::resGraph() {
             //Cf(v,u)
             // É mesmo suposto ser ao contrário
             if(edge.flow > 0) {
-                residualGrid.addEdge(nodes[edge.dest].id, node.id, edge.capacity, 0, edge.time, edge.flow);
+                int f = edge.flow;
+                residualGrid.addEdge(nodes[edge.dest].id, node.id, edge.capacity, 0, edge.time, f);
             }
         }
     }
@@ -245,6 +247,7 @@ int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
         startFlow += e.flow;
     }
     endFlow = startFlow;
+    int incrementTemp = increment;
 
 
 
@@ -275,9 +278,8 @@ int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
                     for(auto e : nodes[start].adj){
                         tempFlow += e.flow;
                     }
-                    if(tempFlow + resCap > increment){
-                        edge.flow = (increment-tempFlow) + edge.flow;
-
+                    if(resCap > incrementTemp){
+                        edge.flow = incrementTemp + edge.flow;
                     }
                     else{
                         edge.flow = resCap + edge.flow;
@@ -290,10 +292,13 @@ int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
             }
         }
 
+        incrementTemp -= resCap;
+
         //determine residual grid
         resGrid = resGraph();
         resGrid.BFS(start, end);
         path = resGrid.get_path(start, end);
+        resCap = INF;
         dest = resGrid.nodes[end];
 
         start_Node = nodes[start];
