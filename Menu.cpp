@@ -76,7 +76,7 @@ void MainMenu::display() {
 
     if (option >= 1 && option <= 10) {
         application->readData(to_string(option));
-        application->getNetwork()->print();
+        //application->getNetwork()->print();
         setNextMenu(new IntermediateMenu());
     }
     else if (option == 0) exit(0);
@@ -198,14 +198,16 @@ void Scenery2_Menu::display() {
 
     switch ((char) option) {
         case '1': {
-            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 13) << endl;
+            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 10, false) << endl;
+            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 2, true) << endl;
 
             break;
         }
         case '2':
-            Network::getInstance()->getNetwork()->node_wait_times(1,4);
+            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 2, true) << endl;
+            break;
         case '3':
-            Network::getInstance()->getNetwork()->earliestStart();
+            Network::getInstance()->getNetwork()->edmondKarpFlux(1,300);
             sleep(4);
             break;
         case '4':
@@ -213,14 +215,7 @@ void Scenery2_Menu::display() {
             sleep(4);
             break;
         case '5':
-            cout << "min dur: "  << Network::getInstance()->getNetwork()->earliestStart() <<endl;
-            Network::getInstance()->getNetwork()->latestFinish();
-
-            for (int i = 1; i <= Network::getInstance()->getNetwork()->getNodes().size() - 1; i++) {
-                if (Network::getInstance()->getNetwork()->getNodes()[i].dist != std::numeric_limits<int>::min())
-                    cout << "ES: " << Network::getInstance()->getNetwork()->getNodes()[i].ES << " LF: " << Network::getInstance()->getNetwork()->getNodes()[i].LF << endl;
-            }
-            sleep(4);
+            Network::getInstance()->getNetwork()->node_wait_times(1,4);
             break;
         case 'h':
             display_scen2_description();
