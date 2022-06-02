@@ -5,6 +5,8 @@
 #include <climits>
 #include <limits>
 #include <chrono>
+#include <set>
+#include <map>
 
 #define INF (INT_MAX/2)
 
@@ -129,8 +131,8 @@ vector<int> Graph::get_path(int a, int b) {
         path.push_front(v); // IMPORTANTE FAZER PUSH_FRONT
     }
     vector<int> pathv;
-    for (int const &n: path) {
-        pathv.push_back(n);
+    for (int k: path) {
+        pathv.push_back(k);
     }
 
     for(auto elem : pathv) cout << "[" << elem << "] " ;
@@ -196,6 +198,8 @@ int Graph::edmondKarpFlux(int start, int end) {
         maxFlux+= edge.flow;
     }
 
+    cout << maxFlux << endl;
+
     return maxFlux;
 }
 
@@ -236,7 +240,6 @@ Graph Graph::resGraph() {
 
 int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
 
-
     Node start_Node;
     std::vector<int> path;
     int resCap = INF;
@@ -248,8 +251,6 @@ int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
     }
     endFlow = startFlow;
     int incrementTemp = increment;
-
-
 
     //determine residual grid
     resGrid = resGraph();
@@ -400,7 +401,7 @@ int Graph::earliestStart() {
         }
     }
 
-   cout << minDuration << endl;
+   /*cout << minDuration << endl;*/
 
     return minDuration;
 }
@@ -489,9 +490,9 @@ int Graph::longestPath(int start, int end) {
     return nodes[end].dist;
 }
 
-void Graph::latestFinish() {
+void Graph::latestFinish(int minDur) {
 
-    int minDuration = earliestStart();
+    int minDuration = minDur;
 
     for (int i = 1; i <= n; i++) {
         nodes[i].LF = minDuration;
@@ -530,44 +531,69 @@ void Graph::latestFinish() {
 
 void Graph::node_wait_times(int start, int end) {
 
-    int maxDur = longestPath(start, end);
-    earliestStart();
-    latestFinish();
+    cout << "All paths used: " << endl;
+    edmondKarpFlux(start, end);
+    int minD = earliestStart();
+    latestFinish(minD);
 
-
-    std::stack<int> maxWaiters;
-
-    int maxDuration = 0, maxWaitingNode = 0, count_nodes = 0;
+    int maxDuration = 0, count_nodes = 0;
 
     for (int i = 1; i <= n; i++) {
-
-        if ((nodes[i].LF - nodes[i].ES) != 0) {
-            cout << "Node: " << i << ", Waiting: " << nodes[i].LF - nodes[i].ES << endl;
-
-            if ((nodes[i].LF - nodes[i].ES) > maxDuration) {
+        for (Edge edge : nodes[i].adj) {
+            if (edge.flow != 0) {
+                if ((nodes[edge.dest].LF - nodes[edge.dest].ES) != 0) {
+                    /*cout << "Node: " << i << ", Waiting: " << nodes[i].LF - nodes[i].ES << endl;*/
+                    if ((nodes[edge.dest].LF - nodes[edge.dest].ES) > maxDuration) {
                         maxDuration = (nodes[i].LF - nodes[i].ES);
-                        maxWaitingNode = i;
+                    }
+
+
+                    nodes[edge.dest].visited = true;
+                }
+            }
+
+        }
+    }
+
+    std::map<int, int> biggest;
+
+    for (int i = 1; i <= n; i++) {
+        for (Edge edge: nodes[i].adj) {
+            if (edge.flow != 0) {
+                if ((nodes[edge.dest].LF - nodes[edge.dest].ES) == maxDuration) {
+                    count_nodes++;
+                    if (biggest.find(edge.dest) != biggest.end()) {
+                        biggest.find(edge.dest)->second++;
+                    }
+                    else {
+                        biggest.insert(make_pair(edge.dest, 1));
+                    }
+                }
             }
         }
     }
 
-    for (int i = 1; i <= n; i++) if ((nodes[i].LF - nodes[i].ES) == maxDur) count_nodes++;
+    cout << endl;
+    for (auto l : biggest) {
+        cout << "Largest waiting time happened on node: " << l.first << ", " << l.second << " time(s)." << endl;
+    }
 
-    std::cout << "The largest waiting time was: " << maxDuration << ". It happened: " << count_nodes << endl;
+    cout << endl;
+    std::cout << "The largest waiting time was: " << maxDuration << ". It happened: " << count_nodes << " time(s)." << endl;
 
 }
 
-int Graph::path_Capacity(const list<int>& path) {
+int Graph::path_Capacity(const vector<int>& path) {
 
-    vector<int> pathv;
+    /*vector<int> pathv;
     for (int const &k: path) {
         pathv.push_back(k);
-    }
+    }*/
 
     int capacity = INF;
     for(int i = 0; i < path.size(); i++){
-        for(auto e : nodes[i].adj){
-            if(e.dest==pathv[i-1])
+        for(auto e : nodes[path[i]].adj){
+            if(e.dest==path[i+1])
                 capacity=min(capacity, e.capacity);
         }
     }
