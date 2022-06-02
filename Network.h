@@ -58,13 +58,13 @@ public:
         bool validInput = true;
         do
         {
-            cout << message;
+            cout << message << "(between 1 and " << n << "): ";
 
             cin >> input;
 
             if (input < 1 || input > n || cin.fail())
             {
-                cout << "Invalid!" << endl;
+                cout << "Error: Invalid node number!" << endl;
 
                 cin.clear();
                 cin.ignore();
