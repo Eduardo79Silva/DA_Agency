@@ -62,23 +62,24 @@ void MainMenu::display() {
     cout << "|   Choose your desired dataset:    |" << endl;
     cout << "|                                   |" << endl;
 
-    for(int i = 0; i < 11; i++) {
+    for(int i = 1; i < 11; i++) {
         std::cout  << "|    [" << i << "] " << setw(6 - (to_string(i).length() + 2)) << left  << "Dataset" << " "
         << setw(20 - to_string(i).length()) << left << i  << "|" << std::endl;
     }
     cout << "|                                   |" << endl;
-    cout << "|   [E] Exit                        |" << endl;
+    cout << "|    [0] Exit                       |" << endl;
     cout << "|___________________________________|" << endl;
 
     std::cout << "Please input your choice: " << std::endl << std::flush;
     std::cin >> option;
 
-    if (option == 45 || option == 65) exit(0);
-    else if (option >= 1 && option <= 10) {
+
+    if (option >= 1 && option <= 10) {
         application->readData(to_string(option));
         application->getNetwork()->print();
         setNextMenu(new IntermediateMenu());
     }
+    else if (option == 0) exit(0);
     else std::cout << "Invalid Input \n:";
 }
 
