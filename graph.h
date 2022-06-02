@@ -100,7 +100,7 @@ public:
 
     int earliestStart();
 
-    void latestFinish();
+    void latestFinish(int minDur);
 
     void topSort(int start, std::stack<int> &stack);
 

@@ -6,6 +6,7 @@
 #include <limits>
 #include <chrono>
 #include <set>
+#include <map>
 
 #define INF (INT_MAX/2)
 
@@ -130,8 +131,8 @@ vector<int> Graph::get_path(int a, int b) {
         path.push_front(v); // IMPORTANTE FAZER PUSH_FRONT
     }
     vector<int> pathv;
-    for (int const &n: path) {
-        pathv.push_back(n);
+    for (int k: path) {
+        pathv.push_back(k);
     }
 
     for(auto elem : pathv) cout << "[" << elem << "] " ;
@@ -237,7 +238,6 @@ Graph Graph::resGraph() {
 
 int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
 
-
     Node start_Node;
     std::vector<int> path;
     int resCap = INF;
@@ -248,8 +248,6 @@ int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
         startFlow += e.flow;
     }
     endFlow = startFlow;
-
-
 
     //determine residual grid
     resGrid = resGraph();
@@ -487,9 +485,9 @@ int Graph::longestPath(int start, int end) {
     return nodes[end].dist;
 }
 
-void Graph::latestFinish() {
+void Graph::latestFinish(int minDur) {
 
-    int minDuration = earliestStart();
+    int minDuration = minDur;
 
     for (int i = 1; i <= n; i++) {
         nodes[i].LF = minDuration;
@@ -528,14 +526,12 @@ void Graph::latestFinish() {
 
 void Graph::node_wait_times(int start, int end) {
 
+    cout << "All paths used: " << endl;
     edmondKarpFlux(start, end);
-    earliestStart();
-    latestFinish();
+    int minD = earliestStart();
+    latestFinish(minD);
 
-
-    std::stack<int> maxWaiters;
-
-    int maxDuration = 0, maxWaitingNode = 0, count_nodes = 0;
+    int maxDuration = 0, count_nodes = 0;
 
     for (int i = 1; i <= n; i++) {
         for (Edge edge : nodes[i].adj) {
@@ -544,7 +540,6 @@ void Graph::node_wait_times(int start, int end) {
                     /*cout << "Node: " << i << ", Waiting: " << nodes[i].LF - nodes[i].ES << endl;*/
                     if ((nodes[edge.dest].LF - nodes[edge.dest].ES) > maxDuration) {
                         maxDuration = (nodes[i].LF - nodes[i].ES);
-                        maxWaitingNode = i;
                     }
 
 
@@ -554,33 +549,32 @@ void Graph::node_wait_times(int start, int end) {
 
         }
     }
-    std::vector<int> biggest;
-    std::set<int> biggest2;
-    /*for (int i = 1; i <= n; i++) if ((nodes[i].LF - nodes[i].ES) == maxDuration) count_nodes++;*/
+
+    std::map<int, int> biggest;
+
     for (int i = 1; i <= n; i++) {
         for (Edge edge: nodes[i].adj) {
             if (edge.flow != 0) {
                 if ((nodes[edge.dest].LF - nodes[edge.dest].ES) == maxDuration) {
                     count_nodes++;
-                    biggest.push_back(edge.dest);
-                    biggest2.emplace(edge.dest);
+                    if (biggest.find(edge.dest) != biggest.end()) {
+                        biggest.find(edge.dest)->second++;
+                    }
+                    else {
+                        biggest.insert(make_pair(edge.dest, 1));
+                    }
                 }
             }
         }
     }
 
-    std::cout << "The largest waiting time was: " << maxDuration << ". It happened: " << count_nodes << endl;
+    cout << endl;
     for (auto l : biggest) {
-        cout << "Node: " <<  l << endl;
+        cout << "Largest waiting time happened on node: " << l.first << ", " << l.second << " time(s)." << endl;
     }
 
-    cout << "-----------------------------" << endl;
-
-    for (auto l : biggest2) {
-        cout << "Node: " <<  l << endl;
-    }
-    std::cout << "The largest waiting time was: " << maxDuration << ". It happened: " << biggest2.size() << endl;
-
+    cout << endl;
+    std::cout << "The largest waiting time was: " << maxDuration << ". It happened: " << count_nodes << " time(s)." << endl;
 
 }
 
