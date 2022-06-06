@@ -14,7 +14,7 @@
 using namespace std;
 
 /**
-     * Implementação de maxHeap fornecida pelos docentes : Binary max-heap to represent integer keys of type K with values (priorities) of type V.
+     * maxHeap implementation: Binary max-heap to represent integer keys of type K with values (priorities) of type V.
      */
 template <class K, class V>
 class MaxHeap {
@@ -34,12 +34,41 @@ class MaxHeap {
     void swap(int i1, int i2);
 
 public:
-    MaxHeap(int n, const K& notFound); // Create a min-heap for a max of n pairs (K,V) with notFound returned when empty
-    int getSize();              // Return number of elements in the heap
-    bool hasKey(const K& key);  // Heap has key?
-    void insert(const K& key, const V& value);      // Insert (key, value) on the heap
-    void increaseKey(const K& key, const V& value); // Increase value of key
-    K removeMax(); // remove and return key with smaller value
+    /**
+     * Create a max-heap for a max of n pairs (K,V) with notFound returned when empty
+     * @param n Number of pairs
+     * @param notFound
+     */
+    MaxHeap(int n, const K& notFound);
+    /**
+     * @return Number of elements in the heap
+     */
+    int getSize();
+    /**
+     * @param key Key to search
+     * @return If heap has key
+     */
+    bool hasKey(const K& key);
+    /**
+     * Insert (key, value) on the heap
+     * @param key
+     * @param value
+     */
+    void insert(const K& key, const V& value);
+    /**
+     * Increase value of key
+     * @param key
+     * @param value
+     */
+    void increaseKey(const K& key, const V& value);
+    /**
+     * Remove and return key with higher value
+     * @return Key to return
+     */
+    K removeMax();
+    /**
+     * @return If the heap is pr not empty
+     */
     bool empty();
 };
 
@@ -48,7 +77,7 @@ public:
 // Make a value go "up the tree" until it reaches its position
 template <class K, class V>
 void MaxHeap<K,V>::upHeap(int i) {
-    while (i>1 && a[i].value > a[PARENT(i)].value) { // while pos greater than parent, keep swapping to upper position  swapped
+    while (i>1 && a[i].value > a[PARENT(i)].value) { // while pos greater than parent, keep swapping to upper position
         swap(i, PARENT(i));
         i = PARENT(i);
     }
@@ -59,14 +88,14 @@ template <class K, class V>
 void MaxHeap<K,V>::downHeap(int i) {
     while (LEFT(i) <= size) { // while within heap limits
         int j = LEFT(i);
-        if (RIGHT(i)<=size && a[RIGHT(i)].value > a[j].value) j = RIGHT(i); // choose greater child  swapped
-        if (a[i].value > a[j].value) break;   // node already greater than children, stop  swapped
-        swap(i, j);                    // otherwise, swap with greater child  swapped
+        if (RIGHT(i)<=size && a[RIGHT(i)].value > a[j].value) j = RIGHT(i); // choose greater child
+        if (a[i].value > a[j].value) break;   // node already greater than children, stop
+        swap(i, j);                    // otherwise, swap with greater child
         i = j;
     }
 }
 
-// Swap two positions of the heap (update their positions)  stays the same?
+// Swap two positions of the heap (update their positions)
 template <class K, class V>
 void MaxHeap<K,V>::swap(int i1, int i2) {
     Node tmp = a[i1]; a[i1] = a[i2]; a[i2] = tmp;
@@ -76,12 +105,12 @@ void MaxHeap<K,V>::swap(int i1, int i2) {
 
 // ----------------------------------------------
 
-// Create a max-heap for a max of n pairs (K,V) with notFound returned when empty  stays the same?
+// Create a max-heap for a max of n pairs (K,V) with notFound returned when empty
 template <class K, class V>
 MaxHeap<K,V>::MaxHeap(int n, const K& notFound) : KEY_NOT_FOUND(notFound), size(0), maxSize(n), a(n+1) {
 }
 
-// Return number of elements in the heap  stays the same?
+// Return number of elements in the heap
 template <class K, class V>
 int MaxHeap<K,V>::getSize() {
     return size;

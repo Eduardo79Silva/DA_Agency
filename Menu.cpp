@@ -148,26 +148,40 @@ void Scenery1_Menu::display() {
     std::cout << "Please input your choice: " << std::endl << std::flush;
     std::cin >> option;
 
+    int start, end;
+
     switch ((char) option) {
         case '1': {
+
             int start = Network::getInstance()->askNodesInput("Please input the Start Node ");
             int end = Network::getInstance()->askNodesInput("Please input the End Node ");
 
-            cout << start << "|" <<  end << endl;
-
-            break;
-        }
-        case '2':
-            cout << "Shortest path: ";
-            Network::getInstance()->getNetwork()->dijkstra(1);
-            Network::getInstance()->getNetwork()->get_path(1, 4, true);
-            cout << "Capacity: ";
-            cout << Network::getInstance()->getNetwork()->path_Capacity(Network::getInstance()->getNetwork()->get_path(1, 4, false));
+            Network::getInstance()->getNetwork()->dijkstra(start);
             cout << "Max capacity path: ";
             Network::getInstance()->getNetwork()->maximumFlowPath(1);
-            Network::getInstance()->getNetwork()->get_path(1, 4, true);
+            Network::getInstance()->getNetwork()->get_path(start, end, true);
             cout << "Capacity: ";
-            cout << Network::getInstance()->getNetwork()->path_Capacity(Network::getInstance()->getNetwork()->get_path(1, 4, false));
+            cout << Network::getInstance()->getNetwork()->path_Capacity(Network::getInstance()->getNetwork()->get_path(start, end, false));
+
+            sleep(4);
+            break;
+
+        }
+        case '2':
+
+            start = Network::getInstance()->askNodesInput("Please input the Start Node ");
+            end = Network::getInstance()->askNodesInput("Please input the End Node ");
+
+            cout << "Shortest path: ";
+            Network::getInstance()->getNetwork()->dijkstra(1);
+            Network::getInstance()->getNetwork()->get_path(start, end, true);
+            cout << "Capacity: ";
+            cout << Network::getInstance()->getNetwork()->path_Capacity(Network::getInstance()->getNetwork()->get_path(start, end, false));
+            cout << "Max capacity path: ";
+            Network::getInstance()->getNetwork()->maximumFlowPath(1);
+            Network::getInstance()->getNetwork()->get_path(start, end, true);
+            cout << "Capacity: ";
+            cout << Network::getInstance()->getNetwork()->path_Capacity(Network::getInstance()->getNetwork()->get_path(start, end, false));
             sleep(4);
             break;
         case 'h':
@@ -209,26 +223,38 @@ void Scenery2_Menu::display() {
     std::cout << "Please input your choice: " << std::endl << std::flush;
     std::cin >> option;
 
+    int start, end, size;
+
     switch ((char) option) {
         case '1': {
-            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 10, false) << endl;
-            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 2, true) << endl;
+            start = Network::getInstance()->askNodesInput("Please input the Start Node ");
+            end = Network::getInstance()->askNodesInput("Please input the End Node ");
+            size = Network::getInstance()->askNodesInput("Please input the size of the group ");
+            cout << Network::getInstance()->getNetwork()->correctGroupSize(start,end, size, false) << endl;
+            cout << Network::getInstance()->getNetwork()->correctGroupSize(start,end, 2, true) << endl;
 
             break;
         }
         case '2':
-            cout << Network::getInstance()->getNetwork()->correctGroupSize(1,2, 2, true) << endl;
+            size = Network::getInstance()->askNodesInput("Please input the size of the increment of the group ");
+            cout << Network::getInstance()->getNetwork()->correctGroupSize(start,end, size, true) << endl;
             break;
         case '3':
-            Network::getInstance()->getNetwork()->edmondKarpFlux(1,2);
+            start = Network::getInstance()->askNodesInput("Please input the Start Node ");
+            end = Network::getInstance()->askNodesInput("Please input the End Node ");
+            Network::getInstance()->getNetwork()->edmondKarpFlux(start,end);
             sleep(4);
             break;
         case '4':
-            Network::getInstance()->getNetwork()->longestPath(1, 300);
+            start = Network::getInstance()->askNodesInput("Please input the Start Node ");
+            end = Network::getInstance()->askNodesInput("Please input the End Node ");
+            Network::getInstance()->getNetwork()->longestPath(start, end);
             sleep(4);
             break;
         case '5':
-            Network::getInstance()->getNetwork()->node_wait_times(1,2);
+            start = Network::getInstance()->askNodesInput("Please input the Start Node ");
+            end = Network::getInstance()->askNodesInput("Please input the End Node ");
+            Network::getInstance()->getNetwork()->node_wait_times(start,end);
             break;
         case 'h':
             display_scen2_description();

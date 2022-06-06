@@ -14,7 +14,7 @@
 using namespace std;
 
 /**
-     * Implementação de minHeap fornecida pelos docentes : Binary min-heap to represent integer keys of type K with values (priorities) of type V.
+     * minHeap implementation: Binary min-heap to represent integer keys of type K with values (priorities) of type V.
      */
 template <class K, class V>
 class MinHeap {
@@ -34,11 +34,37 @@ class MinHeap {
     void swap(int i1, int i2);
 
 public:
-    MinHeap(int n, const K& notFound); // Create a min-heap for a max of n pairs (K,V) with notFound returned when empty
-    int getSize();              // Return number of elements in the heap
-    bool hasKey(const K& key);  // Heap has key?
-    void insert(const K& key, const V& value);      // Insert (key, value) on the heap
-    void decreaseKey(const K& key, const V& value); // Decrease value of key
+    /**
+     * Create a min-heap for a max of n pairs (K,V) with notFound returned when empty
+     * @param n Number of pairs
+     * @param notFound
+     */
+    MinHeap(int n, const K& notFound);
+    /**
+     * @return Number of elements in the heap
+     */
+    int getSize();
+    /**
+     * @param key Key to search
+     * @return If heap has key
+     */
+    bool hasKey(const K& key);
+    /**
+     * Insert (key, value) on the heap
+     * @param key
+     * @param value
+     */
+    void insert(const K& key, const V& value);
+    /**
+     * Decrease value of key
+     * @param key
+     * @param value
+     */
+    void decreaseKey(const K& key, const V& value);
+    /**
+     * Remove and return key with smaller value
+     * @return Key to return
+     */
     K removeMin(); // remove and return key with smaller value
 };
 

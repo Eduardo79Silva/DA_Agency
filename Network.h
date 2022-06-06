@@ -32,15 +32,26 @@ private:
     string filepath;
     int nodes;
     int edges;
-    //vector<vector<int>> graphInfo;  //vetor de dentro tem os 4 int da info do ficheiro
 
 
 public:
+    /**
+     * @return An instance of the network class
+     */
     static Network * getInstance();
+    /**
+     * REads the info from the files to the application
+     */
     void readInfo();
+    /**
+     * @return A graph with all the information
+     */
     Graph *  readGraph();
+    /**
+     * Reads data from a file
+     * @param filestring The name of the file to read from
+     */
     void readData(const string& filestring);
-    //Graph toGraph();
 
 
     void setShouldPop(bool b) {
@@ -51,6 +62,11 @@ public:
         return this->should_Pop;
     }
 
+    /**
+     * Function to ask for input to the user
+     * @param message The message to show to the user
+     * @return Input from the user
+     */
     int askNodesInput(const string& message) {
         int input;
         int n = network->getNodes().size();
@@ -76,6 +92,5 @@ public:
         } while (true);
     }
 };
-
 
 #endif //DA_TRAVEL_NETWORK_H
