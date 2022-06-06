@@ -249,9 +249,15 @@ int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
     Graph resGrid = Graph(n, true);
     int startFlow = 0;
     int endFlow = 0;
-    for(auto e : nodes[start].adj){
-        startFlow += e.flow;
+    if(!correct){
+        reset_Flux();
     }
+    else{
+        for(auto e : nodes[start].adj){
+            startFlow += e.flow;
+        }
+    }
+
     endFlow = startFlow;
 
     int incrementTemp = increment;

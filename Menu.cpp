@@ -201,6 +201,7 @@ Scenery2_Menu::Scenery2_Menu() : Menu() {}
 
 void Scenery2_Menu::display() {
     char option;
+    char yn;
 
     using namespace std;
 
@@ -210,7 +211,6 @@ void Scenery2_Menu::display() {
     cout << "|___________________________________|" << endl;
     cout << "|                                   |" << endl;
     cout << "|   [.1]                            |" << endl;
-    cout << "|   [.2]                            |" << endl;
     cout << "|   [.3]                            |" << endl;
     cout << "|   [.4]                            |" << endl;
     cout << "|   [.5]                            |" << endl;
@@ -232,13 +232,15 @@ void Scenery2_Menu::display() {
             size = Network::getInstance()->askNodesInput("Please input the size of the group ");
             cout << Network::getInstance()->getNetwork()->correctGroupSize(start,end, size, false) << endl;
             cout << Network::getInstance()->getNetwork()->correctGroupSize(start,end, 2, true) << endl;
+            cout << "Do you wish to increment the size of your group? (y/n)";
+            cin >> yn;
+            if(yn == 'y'){
+                size = Network::getInstance()->askNodesInput("Please input the size of the increment of the group ");
+                cout << Network::getInstance()->getNetwork()->correctGroupSize(start,end, size, true) << endl;
+            }
 
             break;
         }
-        case '2':
-            size = Network::getInstance()->askNodesInput("Please input the size of the increment of the group ");
-            cout << Network::getInstance()->getNetwork()->correctGroupSize(start,end, size, true) << endl;
-            break;
         case '3':
             start = Network::getInstance()->askNodesInput("Please input the Start Node ");
             end = Network::getInstance()->askNodesInput("Please input the End Node ");
