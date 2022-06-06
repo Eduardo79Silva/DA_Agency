@@ -201,7 +201,7 @@ int Graph::edmondKarpFlux(int start, int end) {
         maxFlux+= edge.flow;
     }
 
-    cout << maxFlux << endl;
+    cout << "Maximum flow obtained was: " << maxFlux << endl;
 
     return maxFlux;
 }
@@ -331,6 +331,7 @@ int Graph::correctGroupSize(int start, int end, int increment, bool correct) {
 
     if(endFlow - startFlow < increment){
         if (correct) {
+            cout << "Group size exceeds capacity of the buses" << endl;
             return -1;
         }
         return endFlow;
@@ -560,7 +561,6 @@ void Graph::node_wait_times(int start, int end) {
         for (Edge edge : nodes[i].adj) {
             if (edge.flow != 0) {
                 if ((nodes[edge.dest].LF - nodes[edge.dest].ES) != 0) {
-                    /*cout << "Node: " << i << ", Waiting: " << nodes[i].LF - nodes[i].ES << endl;*/
                     if ((nodes[edge.dest].LF - nodes[edge.dest].ES) > maxDuration) {
                         maxDuration = (nodes[i].LF - nodes[i].ES);
                     }

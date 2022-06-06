@@ -231,14 +231,15 @@ void Scenery2_Menu::display() {
             end = Network::getInstance()->askNodesInput("Please input the End Node ");
             size = Network::getInstance()->askNodesInput("Please input the size of the group ");
             cout << Network::getInstance()->getNetwork()->correctGroupSize(start,end, size, false) << endl;
-            cout << Network::getInstance()->getNetwork()->correctGroupSize(start,end, 2, true) << endl;
             cout << "Do you wish to increment the size of your group? (y/n)";
             cin >> yn;
             if(yn == 'y'){
                 size = Network::getInstance()->askNodesInput("Please input the size of the increment of the group ");
-                cout << Network::getInstance()->getNetwork()->correctGroupSize(start,end, size, true) << endl;
+                if ((Network::getInstance()->getNetwork()->correctGroupSize(start,end, size, true))!=-1) {
+                    cout << Network::getInstance()->getNetwork()->correctGroupSize(start,end, size, true) << endl;
+                }
             }
-
+            sleep(4);
             break;
         }
         case '3':
@@ -257,6 +258,7 @@ void Scenery2_Menu::display() {
             start = Network::getInstance()->askNodesInput("Please input the Start Node ");
             end = Network::getInstance()->askNodesInput("Please input the End Node ");
             Network::getInstance()->getNetwork()->node_wait_times(start,end);
+            sleep(4);
             break;
         case 'h':
             display_scen2_description();
